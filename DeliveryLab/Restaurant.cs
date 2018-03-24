@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 
 namespace DeliveryLab
 {
@@ -16,16 +17,22 @@ namespace DeliveryLab
 			}
 		}
 		public string Name { get; private set; }
-		public User Owner { get; private set; }
+		public string Owner { get; private set; }
+		public bool IsVerified { get; private set; }
 		public List<Dish> Dishes;
 
-		public Restaurant(string name, User owner, int rating, Dish[] dishes)
+		public Restaurant(string name, User owner)
 		{
 			Name = name;
-			Owner = owner;
-			Rating = rating;
+			Owner = owner.Login;
+			Rating = 0;
 			Dishes = new List<Dish>();
-			UpdateDishes(dishes);
+		}
+
+		public void Verify(int rating)
+		{
+			IsVerified = true;
+			SetRating(rating);
 		}
 
 		public void SetRating(int rating)
@@ -38,6 +45,16 @@ namespace DeliveryLab
 			Dishes.Clear();
 			foreach (Dish d in dishes)
 				Dishes.Add(d);
+		}
+
+		public override string ToString()
+		{
+			var builder = new StringBuilder();
+			foreach (Dish d in Dishes)
+				builder.Append(d.ToString() + "\n");
+			if (builder.Length > 0)
+				builder.Remove(builder.Length - 1, 1);
+			return Owner + "|" + Name + "|" + Rating + "\n" + builder.ToString();
 		}
 	}
 }

@@ -15,10 +15,15 @@ namespace DeliveryLab
 		}
 		public string Name { get; private set; }
 
-		public Dish( string name, double price)
+		public Dish(string name, double price)
 		{
 			Name = name;
 			Price = price;
+		}
+
+		public override string ToString()
+		{
+			return Name + "|" + Price;
 		}
 	}
 }

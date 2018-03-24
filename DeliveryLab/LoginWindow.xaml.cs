@@ -1,5 +1,8 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using static DeliveryLab.MainWindow;
 
 namespace DeliveryLab
 {
@@ -13,33 +16,61 @@ namespace DeliveryLab
 			InitializeComponent();
 		}
 
-		private void CloseWindow(object sender, RoutedEventArgs e)
-		{
-			Close();
-		}
-
 		private void RegisterUser(object sender, RoutedEventArgs e)
 		{
-			var user = new User(loginBox.Text, passBox.Password, Type.User);
-			MainWindow.Users.Add(user);
-			MainWindow.LoginUser(loginBox.Text, passBox.Password);
-			Close();
+			if (loginBox.Text.Contains("|"))
+				new Alert("Неверный логин",
+					"Логин не может содержать символ '|'.").Show();
+			Type group = Type.User;
+			if (restCheckBox.IsChecked ?? false) group = Type.Restaurant;
+			SessionManager.RegisterUser(loginBox.Text, passBox.Password, group);
+		}
+
+		private void CheckIfRegistered()
+		{
+			bool userFound = false;
+			foreach (User u in Users)
+				if (loginBox.Text == u.Login)
+					userFound = true;
+			if (userFound)
+			{
+				regButton.Visibility = Visibility.Collapsed;
+				restCheckBox.Visibility = Visibility.Collapsed;
+			}
+			else
+			{
+				regButton.Visibility = Visibility.Visible;
+				restCheckBox.Visibility = Visibility.Visible;
+			}
+		}
+
+		private void LoginKeyPress(object sender, KeyEventArgs e)
+		{
+			if (e.Key == Key.Return)
+				SessionManager.LogIn(loginBox.Text, passBox.Password);
+			else
+				CheckIfRegistered();
+		}
+
+		private void PassEnterKeyPress(object sender, KeyEventArgs e)
+		{
+			if (e.Key == Key.Return)
+				SessionManager.LogIn(loginBox.Text, passBox.Password);
 		}
 
 		private void LoginUserButtonClick(object sender, RoutedEventArgs e)
 		{
-			MainWindow.LoginUser(loginBox.Text, passBox.Password);
+			SessionManager.LogIn(loginBox.Text, passBox.Password);
+		}
+
+		private void LoginBoxLostFocus(object sender, RoutedEventArgs e)
+		{
+			CheckIfRegistered();
+		}
+
+		private void CloseWindow(object sender, RoutedEventArgs e)
+		{
 			Close();
 		}
-
-		private void EnterKeyPress(object sender, KeyEventArgs e)
-		{
-			if (e.Key == Key.Return)
-			{
-				MainWindow.LoginUser(loginBox.Text, passBox.Password);
-				Close();
-			}
-		}
-
 	}
 }

@@ -1,4 +1,7 @@
-﻿namespace DeliveryLab
+﻿using System.Security.Cryptography;
+using System.Text;
+
+namespace DeliveryLab
 {
 	public enum Type
 	{
@@ -15,18 +18,23 @@
 
 		public User(string login, string password, Type group)
 		{
-			if (group == Type.Administrator)
-				group = Type.User;
 			Group = group;
 			Login = login;
-			Password = password;
+			Password = EncryptString(password);
 		}
-		
-		public User(string login, string password, string masterPassword)
+
+		public override string ToString()
 		{
-			Group = (masterPassword == "12345") ? Type.Administrator : Type.User;
-			Login = login;
-			Password = password;
+			return Group + "|" + Login + "|" + Password;
+		}
+
+		public static string EncryptString(string password)
+		{
+			byte[] hash = MD5.Create().ComputeHash(Encoding.Default.GetBytes(password));
+			var builder = new StringBuilder();
+			foreach (var b in hash)
+				builder.Append(b.ToString("x2"));
+			return builder.ToString();
 		}
 	}
 }
