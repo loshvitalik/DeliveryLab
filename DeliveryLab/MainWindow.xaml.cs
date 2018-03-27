@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows;
 
@@ -10,7 +11,7 @@ namespace DeliveryLab
 	/// Логика взаимодействия для MainWindow.xaml
 	/// </summary>
 	public partial class MainWindow : Window
-	{
+	{ 
 		public static List<User> Users;
 		public static List<Restaurant> Restaurants;
 		public static ObservableCollection<Dish> Dishes;
@@ -24,13 +25,7 @@ namespace DeliveryLab
 			Users = new List<User>();
 			Restaurants = new List<Restaurant>();
 			Dishes = new ObservableCollection<Dish>();
-
-			// test
-			Users.Add(new User("loshvitalik", "12345", Type.Administrator));
-			Restaurants.Add(new Restaurant("Ресторан", Users.Where(u => u.Login == "loshvitalik").First()));
-			Restaurants[0].UpdateDishes(new[] { new Dish("Пельмени", 150) });
-			//
-
+			SaveSystem.LoadAll();
 			UpdateMenu();
 			table.ItemsSource = Dishes;
 		}
@@ -47,7 +42,6 @@ namespace DeliveryLab
 		{
 			if (CurrentUser?.Group == Type.Administrator)
 				Dishes.Insert(0, new Dish(CurrentUser.ToString(), new Random().Next(0, 1000)));
-			var a = Restaurants[0].ToString();
 		}
 
 		private void ToggleAutoRefresh(object sender, RoutedEventArgs e)
@@ -81,11 +75,6 @@ namespace DeliveryLab
 				"Delivery Lab v. 0.3 alpha\n© 2018 loshvitalik, MrBlacktop").Show();
 		}
 
-		private void CloseApp(object sender, EventArgs e)
-		{
-			Application.Current.Shutdown();
-		}
-
 		private void ShowMenu(object sender, RoutedEventArgs e)
 		{
 			title.Content = "Меню";
@@ -102,6 +91,47 @@ namespace DeliveryLab
 		{
 			title.Content = "Заказы";
 			Dishes.Clear();
+		}
+
+		private void LoadUsersButtonClick(object sender, RoutedEventArgs e)
+		{
+			SaveSystem.LoadUsersFromFile();
+		}
+
+		private void SaveUsersButtonClick(object sender, RoutedEventArgs e)
+		{
+			SaveSystem.SaveUsersToFile();
+		}
+
+		private void LoadRestsButtonClick(object sender, RoutedEventArgs e)
+		{
+			SaveSystem.LoadRestsFromFile();
+		}
+
+		private void SaveRestsButtonClick(object sender, RoutedEventArgs e)
+		{
+			SaveSystem.SaveRestsToFile();
+		}
+
+		private void ClearAllButtonClick(object sender, RoutedEventArgs e)
+		{
+			SaveSystem.ClearAll();
+		}
+
+		private void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			UnloadApp();
+		}
+
+		private void CloseAppButtonClick(object sender, RoutedEventArgs e)
+		{
+			UnloadApp();
+		}
+
+		private void UnloadApp()
+		{
+			SaveSystem.SaveAll();
+			Application.Current.Shutdown();
 		}
 	}
 }

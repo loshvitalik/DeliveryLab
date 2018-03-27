@@ -1,5 +1,5 @@
-﻿using System.Security.Cryptography;
-using System.Text;
+﻿using System.Linq;
+using static DeliveryLab.MainWindow;
 
 namespace DeliveryLab
 {
@@ -12,29 +12,30 @@ namespace DeliveryLab
 
 	public class User
 	{
+		public int ID { get; private set; }
 		public Type Group { get; private set; }
 		public string Login { get; private set; }
 		public string Password { get; private set; }
 
-		public User(string login, string password, Type group)
+		public User(Type group, string login, string password)
 		{
+			ID = Users.Any() ? Users.Last().ID + 1 : 0;
 			Group = group;
 			Login = login;
-			Password = EncryptString(password);
+			Password = password;
 		}
 
 		public override string ToString()
 		{
-			return Group + "|" + Login + "|" + Password;
+			return ID + "|" + Group + "|" + Login + "|" + Password;
 		}
 
-		public static string EncryptString(string password)
+		public static User FromString(string str)
 		{
-			byte[] hash = MD5.Create().ComputeHash(Encoding.Default.GetBytes(password));
-			var builder = new StringBuilder();
-			foreach (var b in hash)
-				builder.Append(b.ToString("x2"));
-			return builder.ToString();
+			string[] user = str.Split('|');
+			Type group = user[1].Equals("Administrator") ? Type.Administrator :
+				user[1].Equals("Restaurant") ? Type.Restaurant : Type.User;
+			return new User(group, user[2], user[3]);
 		}
 	}
 }

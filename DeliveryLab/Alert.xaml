@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DeliveryLab"
         mc:Ignorable="d"
-        Height="170" Width="350" WindowStartupLocation="CenterOwner" Background="#FFEFEFF4" ResizeMode="NoResize" Topmost="True" WindowStyle="ThreeDBorderWindow">
+        FocusManager.FocusedElement="{Binding ElementName=closeButton}"
+        Height="170" Width="350" WindowStartupLocation="CenterOwner" Background="#FFEFEFF4" ResizeMode="NoResize" Topmost="True" WindowStyle="ThreeDBorderWindow" ShowInTaskbar="False">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="100*"/>

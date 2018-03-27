@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DeliveryLab"
         mc:Ignorable="d"
-        Title="Delivery Lab" Height="600" MinHeight="480" Width="900" MinWidth="640" ResizeMode="CanResize" Closed="CloseApp" Background="#FFEFEFF4" WindowStyle="ThreeDBorderWindow">
+        Title="Delivery Lab" Height="600" MinHeight="480" Width="900" MinWidth="640" ResizeMode="CanResize" Background="#FFEFEFF4" WindowStyle="ThreeDBorderWindow" Closing="OnWindowClosing">
     <Window.Resources>
         <!-- Пример картинки на всякий -->
         <Image x:Key="receiverOn" Source="Images/on.png" Height="31" Width="51"/>
@@ -29,7 +29,7 @@
             </Setter>
         </Style>
     </Window.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -46,18 +46,27 @@
         </Grid.ColumnDefinitions>
 
         <Menu Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Padding="2" Width="auto" VerticalAlignment="Center" Background="#FFEFEFF4" FontSize="14">
-            <MenuItem x:Name="adminMenu" Header="Админка" Visibility="Collapsed"/>
+            <MenuItem x:Name="adminMenu" Header="Админка" Visibility="Collapsed">
+                <MenuItem Header="Загрузить пользователей из файла" Click="LoadUsersButtonClick"/>
+                <MenuItem Header="Сохранить пользователей в файл" Click="SaveUsersButtonClick"/>
+                <MenuItem Header="Загрузить рестораны из файла" Click="LoadRestsButtonClick"/>
+                <MenuItem Header="Сохранить рестораны в файл" Click="SaveRestsButtonClick"/>
+                <Separator/>
+                <MenuItem Header="Очистить всё">
+                    <MenuItem Header="Очистить все файлы" Click="ClearAllButtonClick" Foreground="#FFFF3B30"/>
+                </MenuItem>
+            </MenuItem>
             <MenuItem Header="Настройки">
                 <MenuItem x:Name="autoRefreshButton" Header="Автообновление" Click="ToggleAutoRefresh" IsCheckable="True" IsChecked="True"/>
                 <Separator/>
-                <MenuItem Header="Удалить аккаунт" Click="DeleteAccountButtonClick" Foreground="#FFFF3B30"/>
+                <MenuItem x:Name="deleteAccountButton" Header="Удалить аккаунт" Click="DeleteAccountButtonClick" IsEnabled="False" Foreground="#FFFF3B30"/>
             </MenuItem>
             <MenuItem Header="Справка">
                 <MenuItem Header="Помощь" Click="ShowHelpWindow"/>
                 <MenuItem Header="О программе" Click="ShowAboutWindow"/>
             </MenuItem>
             <MenuItem Header="Выход">
-                <MenuItem Header="Выход" Click="CloseApp"/>
+                <MenuItem Header="Выход" Click="CloseAppButtonClick"/>
             </MenuItem>
         </Menu>
 

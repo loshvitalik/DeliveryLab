@@ -1,7 +1,5 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using static DeliveryLab.MainWindow;
 
 namespace DeliveryLab
@@ -21,9 +19,12 @@ namespace DeliveryLab
 			if (loginBox.Text.Contains("|"))
 				new Alert("Неверный логин",
 					"Логин не может содержать символ '|'.").Show();
-			Type group = Type.User;
-			if (restCheckBox.IsChecked ?? false) group = Type.Restaurant;
-			SessionManager.RegisterUser(loginBox.Text, passBox.Password, group);
+			else
+			{
+				Type group = Type.User;
+				if (restCheckBox.IsChecked ?? false) group = Type.Restaurant;
+				SessionManager.RegisterUser(group, loginBox.Text, passBox.Password);
+			}
 		}
 
 		private void CheckIfRegistered()

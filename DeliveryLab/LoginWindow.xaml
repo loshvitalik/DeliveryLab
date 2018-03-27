@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:DeliveryLab"
         mc:Ignorable="d"
         FocusManager.FocusedElement="{Binding ElementName=loginBox}"
-        Title="Авторизация — Delivery Lab" Height="270" Width="350" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Background="#FFEFEFF4" WindowStyle="ThreeDBorderWindow" Topmost="True">
+        Title="Авторизация — Delivery Lab" Height="270" Width="350" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Background="#FFEFEFF4" WindowStyle="ThreeDBorderWindow" Topmost="True" ShowInTaskbar="False">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25*"/>
