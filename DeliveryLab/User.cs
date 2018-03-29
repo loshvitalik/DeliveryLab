@@ -27,7 +27,7 @@ namespace DeliveryLab
 		}
 
 		[JsonConstructor]
-		public User(int id, Type group, string login, string password)
+		private User(int id, Type group, string login, string password)
 		{
 			ID = id;
 			Group = group;
