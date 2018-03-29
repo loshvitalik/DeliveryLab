@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
+using Microsoft.Win32;
+using Newtonsoft.Json;
 using static DeliveryLab.MainWindow;
+using System.Collections.ObjectModel;
 
 namespace DeliveryLab
 {
@@ -28,42 +28,73 @@ namespace DeliveryLab
 		public static void ClearAll()
 		{
 			ClearUsers();
+			ClearRests();
 		}
 
-		public static void LoadUsersFromFile()
+		private static void LoadUsersFromFile()
 		{
 			Users.Clear();
-			string[] lines = File.ReadAllLines(UsersDB);
-			foreach (string u in lines)
-				Users.Add(User.FromString(u));
+			Users = JsonConvert.DeserializeObject<ObservableCollection<User>>(File.ReadAllText(UsersDB, Encoding.Default))
+				?? new ObservableCollection<User>();
 		}
 
 		public static void SaveUsersToFile()
 		{
 			File.WriteAllBytes(UsersDB, new byte[0]);
-			foreach (User u in Users)
-				File.AppendAllText(UsersDB, u.ToString() + "\n");
+			File.AppendAllText(UsersDB, JsonConvert.SerializeObject(Users), Encoding.Default);
 		}
 
-		public static void LoadRestsFromFile()
+		public static void SetUsersFileName()
 		{
-			Restaurants.Clear();
-			string[] lines = File.ReadAllLines(RestsDB);
-			foreach (string r in lines)
-				Restaurants.Add(Restaurant.FromString(r));
-		}
-
-		public static void SaveRestsToFile()
-		{
-			File.WriteAllBytes(RestsDB, new byte[0]);
-			foreach (Restaurant r in Restaurants)
-				File.AppendAllText(RestsDB, r.ToString() + "\n");
+			var dialog = new OpenFileDialog()
+			{
+				InitialDirectory = Path.Combine(Environment.CurrentDirectory, "data"),
+				FileName = "users.txt", Filter = "Текстовые файлы (*.txt)|*.txt",
+				Title = "Загрузить из JSON-файла"
+			};
+			if (dialog.ShowDialog() == true)
+				UsersDB = dialog.FileName;
+			LoadUsersFromFile();
 		}
 
 		private static void ClearUsers()
 		{
 			Users.Clear();
-			File.WriteAllBytes(UsersDB, new byte[0]);
+			if (CurrentUser != null)
+				Users.Add(CurrentUser);
+			SaveUsersToFile();
+		}
+
+		private static void LoadRestsFromFile()
+		{
+			Restaurants.Clear();
+			Restaurants = JsonConvert.DeserializeObject<ObservableCollection<Restaurant>>(File.ReadAllText(RestsDB, Encoding.Default))
+				?? new ObservableCollection<Restaurant>();
+		}
+
+		public static void SaveRestsToFile()
+		{
+			File.WriteAllBytes(RestsDB, new byte[0]);
+			File.AppendAllText(RestsDB, JsonConvert.SerializeObject(Restaurants), Encoding.Default);
+		}
+
+		public static void SetRestsFileName()
+		{
+			var dialog = new OpenFileDialog()
+			{
+				InitialDirectory = Path.Combine(Environment.CurrentDirectory, "data"),
+				FileName = "rests.txt", Filter = "Текстовые файлы (*.txt)|*.txt",
+				Title = "Загрузить из JSON-файла"
+			};
+			if (dialog.ShowDialog() == true)
+				RestsDB = dialog.FileName;
+			LoadRestsFromFile();
+		}
+
+		private static void ClearRests()
+		{
+			Restaurants.Clear();
+			SaveRestsToFile();
 		}
 	}
 }

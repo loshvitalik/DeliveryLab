@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DeliveryLab"
         mc:Ignorable="d"
-        Title="Delivery Lab" Height="600" MinHeight="480" Width="900" MinWidth="640" ResizeMode="CanResize" Background="#FFEFEFF4" WindowStyle="ThreeDBorderWindow" Closing="OnWindowClosing">
+        Title="Delivery Lab" Height="600" MinHeight="480" Width="900" MinWidth="640" ResizeMode="CanResize" Background="#FFEFEFF4" WindowStyle="ThreeDBorderWindow">
     <Window.Resources>
         <!-- Пример картинки на всякий -->
         <Image x:Key="receiverOn" Source="Images/on.png" Height="31" Width="51"/>
@@ -47,18 +47,22 @@
 
         <Menu Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Padding="2" Width="auto" VerticalAlignment="Center" Background="#FFEFEFF4" FontSize="14">
             <MenuItem x:Name="adminMenu" Header="Админка" Visibility="Collapsed">
+                <MenuItem Header="Верифицировать все рестораны" Click="VerifyAll"/>
+                <Separator/>
                 <MenuItem Header="Загрузить пользователей из файла" Click="LoadUsersButtonClick"/>
-                <MenuItem Header="Сохранить пользователей в файл" Click="SaveUsersButtonClick"/>
                 <MenuItem Header="Загрузить рестораны из файла" Click="LoadRestsButtonClick"/>
-                <MenuItem Header="Сохранить рестораны в файл" Click="SaveRestsButtonClick"/>
+                <MenuItem Header="Сохранить всё" Click="SaveAllButtonClick"/>
                 <Separator/>
                 <MenuItem Header="Очистить всё">
-                    <MenuItem Header="Очистить все файлы" Click="ClearAllButtonClick" Foreground="#FFFF3B30"/>
+                    <MenuItem Header="...">
+                        <MenuItem Header="Очистить все файлы" Click="ClearAllButtonClick" Foreground="#FFFF3B30"/>
+                    </MenuItem>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="Настройки">
                 <MenuItem x:Name="autoRefreshButton" Header="Автообновление" Click="ToggleAutoRefresh" IsCheckable="True" IsChecked="True"/>
                 <Separator/>
+                <MenuItem x:Name="deleteRestaurantButton" Header="Удалить ресторан" Click="DeleteRestaurantButtonClick" IsEnabled="False" Foreground="#FFFF3B30"/>
                 <MenuItem x:Name="deleteAccountButton" Header="Удалить аккаунт" Click="DeleteAccountButtonClick" IsEnabled="False" Foreground="#FFFF3B30"/>
             </MenuItem>
             <MenuItem Header="Справка">
@@ -76,7 +80,9 @@
         <Button x:Name="showMenu" Content="Меню" Click="ShowMenu" Grid.Column="0" Grid.Row="4" Margin="2,2,2,0" Height="45" Background="White" BorderBrush="#FFC8C7CC" Foreground="#FF007AFF" FontSize="16" VerticalAlignment="Top"/>
         <Button x:Name="showRestaurants" Content="Рестораны" Click="ShowRestaurants" Grid.Column="0" Grid.Row="4" Margin="2,49,2,0" Height="45" Background="White" BorderBrush="#FFC8C7CC" Foreground="#FF007AFF" FontSize="16" VerticalAlignment="Top"/>
         <Button x:Name="showOrders" Content="Заказы" Click="ShowOrders" Visibility="Collapsed" Grid.Column="0" Grid.Row="4" Margin="2,96,2,0" Height="45" Background="White" BorderBrush="#FFC8C7CC" Foreground="#FF007AFF" FontSize="16" VerticalAlignment="Top"/>
-        <Button x:Name="addDishButton" Content="Добавить блюдо" Click="AddNewDish" Visibility="Collapsed" Grid.Column="0" Grid.Row="4" Margin="2,143,2,0" Height="45" Background="White" BorderBrush="#FFC8C7CC" Foreground="Gray" FontSize="16" VerticalAlignment="Top"/>
+        <Button x:Name="showUsers" Content="Пользователи" Click="ShowUsers"  Visibility="Collapsed" Grid.Column="0" Grid.Row="4" Margin="2,143,2,0" Height="45" Background="White" BorderBrush="#FFC8C7CC" Foreground="#FF007AFF" FontSize="16" VerticalAlignment="Top"/>
+        <Button x:Name="addDishButton" Content="Добавить блюдо" Click="AddNewDish" Visibility="Collapsed" Grid.Column="0" Grid.Row="4" Margin="2,190,2,0" Height="45" Background="White" BorderBrush="#FFC8C7CC" Foreground="Gray" FontSize="16" VerticalAlignment="Top"/>
+        <Button Content="Калькулятор" Click="OpenCalcButtonClick" Grid.Column="0" Grid.Row="4" Margin="2,237,2,0" Height="45" Background="White" BorderBrush="#FFC8C7CC" FontSize="16" VerticalAlignment="Top"/>
 
         <DataGrid x:Name="table" Grid.Column="2" Grid.Row="4" Margin="2" IsReadOnly="True" AutoGenerateColumns="False" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Block.TextAlignment="Center" CanUserResizeRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" AlternationCount="1" AlternatingRowBackground="#BFF6F6F7" MinRowHeight="44" RowHeight="44" HorizontalGridLinesBrush="#FFC8C7CC" FontSize="14" VerticalContentAlignment="Center" VerticalGridLinesBrush="#FFB9B9B9" BorderBrush="#FFC8C7CC" Background="White" GridLinesVisibility="All" HeadersVisibility="Column" HorizontalScrollBarVisibility="Disabled">
             <DataGrid.Columns>

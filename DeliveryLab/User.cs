@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Newtonsoft.Json;
 using static DeliveryLab.MainWindow;
 
 namespace DeliveryLab
@@ -25,17 +26,13 @@ namespace DeliveryLab
 			Password = password;
 		}
 
-		public override string ToString()
+		[JsonConstructor]
+		public User(int id, Type group, string login, string password)
 		{
-			return ID + "|" + Group + "|" + Login + "|" + Password;
-		}
-
-		public static User FromString(string str)
-		{
-			string[] user = str.Split('|');
-			Type group = user[1].Equals("Administrator") ? Type.Administrator :
-				user[1].Equals("Restaurant") ? Type.Restaurant : Type.User;
-			return new User(group, user[2], user[3]);
+			ID = id;
+			Group = group;
+			Login = login;
+			Password = password;
 		}
 	}
 }

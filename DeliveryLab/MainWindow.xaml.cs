@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
+using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace DeliveryLab
 {
@@ -11,10 +12,11 @@ namespace DeliveryLab
 	/// Логика взаимодействия для MainWindow.xaml
 	/// </summary>
 	public partial class MainWindow : Window
-	{ 
-		public static List<User> Users;
-		public static List<Restaurant> Restaurants;
+	{
+		public static ObservableCollection<User> Users;
+		public static ObservableCollection<Restaurant> Restaurants;
 		public static ObservableCollection<Dish> Dishes;
+		public static ObservableCollection<string> Orders;
 		public static User CurrentUser;
 		public static Restaurant CurrentRestaurant;
 		public static bool AutoRefresh = true;
@@ -22,31 +24,21 @@ namespace DeliveryLab
 		public MainWindow()
 		{
 			InitializeComponent();
-			Users = new List<User>();
-			Restaurants = new List<Restaurant>();
+			Users = new ObservableCollection<User>();
+			Restaurants = new ObservableCollection<Restaurant>();
 			Dishes = new ObservableCollection<Dish>();
+			Orders = new ObservableCollection<string>();
 			SaveSystem.LoadAll();
-			UpdateMenu();
 			table.ItemsSource = Dishes;
+			UpdateMenu();
 		}
 
-		public void UpdateMenu()
+		public static void UpdateMenu()
 		{
 			Dishes.Clear();
 			foreach (var rest in Restaurants)
 				foreach (var dish in rest.Dishes)
 					Dishes.Add(dish);
-		}
-
-		private void AddNewDish(object sender, RoutedEventArgs e)
-		{
-			if (CurrentUser?.Group == Type.Administrator)
-				Dishes.Insert(0, new Dish(CurrentUser.ToString(), new Random().Next(0, 1000)));
-		}
-
-		private void ToggleAutoRefresh(object sender, RoutedEventArgs e)
-		{
-			AutoRefresh = autoRefreshButton.IsChecked = !AutoRefresh;
 		}
 
 		private void LoginButtonClick(object sender, RoutedEventArgs e)
@@ -55,6 +47,155 @@ namespace DeliveryLab
 				new LoginWindow().Show();
 			else
 				SessionManager.LogOut();
+		}
+
+		// Левая колонка
+		private void ShowMenu(object sender, RoutedEventArgs e)
+		{
+			title.Content = "Меню";
+			table.ItemsSource = Dishes;
+			if (table.Columns.Count > 2) table.Columns.RemoveAt(2);
+			table.Columns[0] = new DataGridTextColumn()
+			{
+				Header = "Название",
+				Binding = new Binding("Name"),
+				Width = new DataGridLength(75, DataGridLengthUnitType.Star),
+				HeaderStyle = (Style)FindResource("CenterGridHeaderStyle")
+			};
+			table.Columns[1] = new DataGridTextColumn()
+			{
+				Header = "Стоимость",
+				Binding = new Binding("Price"),
+				Width = new DataGridLength(25, DataGridLengthUnitType.Star),
+				HeaderStyle = (Style)FindResource("CenterGridHeaderStyle")
+			};
+		}
+
+		private void ShowRestaurants(object sender, RoutedEventArgs e)
+		{
+			title.Content = "Рестораны";
+			table.ItemsSource = Restaurants;
+			if (table.Columns.Count > 2) table.Columns.RemoveAt(2);
+			table.Columns[0] = new DataGridTextColumn()
+			{
+				Header = "Название",
+				Binding = new Binding("Name"),
+				Width = new DataGridLength(75, DataGridLengthUnitType.Star),
+				HeaderStyle = (Style)FindResource("CenterGridHeaderStyle")
+			};
+			table.Columns[1] = new DataGridCheckBoxColumn()
+			{
+				Header = "Проверен",
+				Binding = new Binding("IsVerified"),
+				Width = new DataGridLength(12.5, DataGridLengthUnitType.Star),
+				HeaderStyle = (Style)FindResource("CenterGridHeaderStyle")
+			};
+			table.Columns.Add(
+				new DataGridTextColumn()
+			{
+				Header = "Рейтинг",
+				Binding = new Binding("Rating"),
+				Width = new DataGridLength(12.5, DataGridLengthUnitType.Star),
+				HeaderStyle = (Style)FindResource("CenterGridHeaderStyle")
+			});
+		}
+
+		private void ShowOrders(object sender, RoutedEventArgs e)
+		{
+			title.Content = "Заказы";
+			table.ItemsSource = Orders;
+			if (table.Columns.Count > 2) table.Columns.RemoveAt(2);
+			table.Columns[0] = new DataGridTextColumn()
+			{
+				Header = "Заказ",
+				Binding = new Binding("Name"),
+				Width = new DataGridLength(75, DataGridLengthUnitType.Star),
+				HeaderStyle = (Style)FindResource("CenterGridHeaderStyle")
+			};
+			table.Columns[1] = new DataGridTextColumn()
+			{
+				Header = "Номер заказа",
+				Binding = new Binding("ID"),
+				Width = new DataGridLength(25, DataGridLengthUnitType.Star),
+				HeaderStyle = (Style)FindResource("CenterGridHeaderStyle")
+			};
+		}
+
+		private void ShowUsers(object sender, RoutedEventArgs e)
+		{
+			title.Content = "Пользователи";
+			table.ItemsSource = Users;
+			if (table.Columns.Count > 2) table.Columns.RemoveAt(2);
+			table.Columns[0] = new DataGridTextColumn()
+			{
+				Header = "ID",
+				Binding = new Binding("ID"),
+				Width = new DataGridLength(10, DataGridLengthUnitType.Star),
+				HeaderStyle = (Style)FindResource("CenterGridHeaderStyle")
+			};
+			table.Columns[1] = new DataGridTextColumn()
+			{
+				Header = "Логин",
+				Binding = new Binding("Login"),
+				Width = new DataGridLength(70, DataGridLengthUnitType.Star),
+				HeaderStyle = (Style)FindResource("CenterGridHeaderStyle")
+			};
+			table.Columns.Add(new DataGridTextColumn()
+			{
+				Header = "Группа",
+				Binding = new Binding("Group"),
+				Width = new DataGridLength(20, DataGridLengthUnitType.Star),
+				HeaderStyle = (Style)FindResource("CenterGridHeaderStyle")
+			});
+		}
+
+		private void AddNewDish(object sender, RoutedEventArgs e)
+		{
+			if (CurrentUser?.Group == Type.Restaurant)
+				CurrentRestaurant.UpdateDishes(new List<Dish>()
+				{ new Dish("Рандомная еда", new Random().Next(0, 10000)) });
+		}
+
+		private void OpenCalcButtonClick(object sender, RoutedEventArgs e)
+		{
+			Process.Start("calc.exe");
+		}
+
+		// Меню
+		private void VerifyAll(object sender, RoutedEventArgs e)
+		{
+			foreach (Restaurant r in Restaurants)
+				r.IsVerified = true;
+		}
+
+		private void LoadUsersButtonClick(object sender, RoutedEventArgs e)
+		{
+			SaveSystem.SetUsersFileName();
+		}
+
+		private void LoadRestsButtonClick(object sender, RoutedEventArgs e)
+		{
+			SaveSystem.SetRestsFileName();
+		}
+
+		private void SaveAllButtonClick(object sender, RoutedEventArgs e)
+		{
+			SaveSystem.SaveAll();
+		}
+
+		private void ClearAllButtonClick(object sender, RoutedEventArgs e)
+		{
+			SaveSystem.ClearAll();
+		}
+
+		private void ToggleAutoRefresh(object sender, RoutedEventArgs e)
+		{
+			AutoRefresh = autoRefreshButton.IsChecked = !AutoRefresh;
+		}
+
+		private void DeleteRestaurantButtonClick(object sender, RoutedEventArgs e)
+		{
+			SessionManager.DeleteRestaurant();
 		}
 
 		private void DeleteAccountButtonClick(object sender, RoutedEventArgs e)
@@ -75,62 +216,8 @@ namespace DeliveryLab
 				"Delivery Lab v. 0.3 alpha\n© 2018 loshvitalik, MrBlacktop").Show();
 		}
 
-		private void ShowMenu(object sender, RoutedEventArgs e)
-		{
-			title.Content = "Меню";
-			Dishes.Clear();
-		}
-
-		private void ShowRestaurants(object sender, RoutedEventArgs e)
-		{
-			title.Content = "Рестораны";
-			Dishes.Clear();
-		}
-
-		private void ShowOrders(object sender, RoutedEventArgs e)
-		{
-			title.Content = "Заказы";
-			Dishes.Clear();
-		}
-
-		private void LoadUsersButtonClick(object sender, RoutedEventArgs e)
-		{
-			SaveSystem.LoadUsersFromFile();
-		}
-
-		private void SaveUsersButtonClick(object sender, RoutedEventArgs e)
-		{
-			SaveSystem.SaveUsersToFile();
-		}
-
-		private void LoadRestsButtonClick(object sender, RoutedEventArgs e)
-		{
-			SaveSystem.LoadRestsFromFile();
-		}
-
-		private void SaveRestsButtonClick(object sender, RoutedEventArgs e)
-		{
-			SaveSystem.SaveRestsToFile();
-		}
-
-		private void ClearAllButtonClick(object sender, RoutedEventArgs e)
-		{
-			SaveSystem.ClearAll();
-		}
-
-		private void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			UnloadApp();
-		}
-
 		private void CloseAppButtonClick(object sender, RoutedEventArgs e)
 		{
-			UnloadApp();
-		}
-
-		private void UnloadApp()
-		{
-			SaveSystem.SaveAll();
 			Application.Current.Shutdown();
 		}
 	}

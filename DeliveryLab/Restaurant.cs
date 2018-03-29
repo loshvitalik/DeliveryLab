@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Newtonsoft.Json;
 using static DeliveryLab.MainWindow;
 
 namespace DeliveryLab
@@ -22,7 +22,7 @@ namespace DeliveryLab
 		public int ID { get; private set; }
 		public string Name { get; private set; }
 		public int OwnerID { get; private set; }
-		public bool IsVerified { get; private set; }
+		public bool IsVerified { get; set; }
 		public List<Dish> Dishes;
 
 		public Restaurant(string name, User owner)
@@ -34,6 +34,7 @@ namespace DeliveryLab
 			Dishes = new List<Dish>();
 		}
 
+		[JsonConstructor]
 		private Restaurant(int id, int ownerID, string name, int rating, bool isVerified, List<Dish> dishes)
 		{
 			ID = id;
@@ -44,35 +45,12 @@ namespace DeliveryLab
 			Dishes = dishes;
 		}
 
-		public void Verify(int rating)
-		{
-			IsVerified = true;
-			Rating = rating;
-		}
-
 		public void UpdateDishes(List<Dish> dishes)
 		{
 			Dishes = dishes;
-		}
-
-		public override string ToString()
-		{
-			var builder = new StringBuilder();
-			foreach (Dish d in Dishes)
-				builder.Append(d.ToString() + "|");
-			if (builder.Length > 0)
-				builder.Remove(builder.Length - 1, 1);
-			return ID + "|" + OwnerID + "|" + Name + "|" + Rating + "|" + IsVerified + "|" + builder.ToString();
-		}
-
-		public static Restaurant FromString(string str)
-		{
-			string[] rest = str.Split('|');
-			bool isVerified = rest[4].Equals("True");
-			List<Dish> dishes = new List<Dish>();
-			for (int i = 5; i < rest.Length - 1; i += 2)
-				dishes.Add(new Dish(rest[i], double.Parse(rest[i + 1])));
-			return new Restaurant(int.Parse(rest[0]), int.Parse(rest[1]), rest[2], int.Parse(rest[3]), isVerified, dishes);
+			SaveSystem.SaveRestsToFile();
+			if (AutoRefresh)
+				UpdateMenu();
 		}
 	}
 }

@@ -19,7 +19,7 @@
             <ColumnDefinition Width="50*"/>
         </Grid.ColumnDefinitions>
 
-        <Label x:Name="label" Content="Введите название Вашего ресторана" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" FontSize="16" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
+        <Label x:Name="label" Content="Введите название Вашего нового ресторана" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" FontSize="16" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
         <TextBox x:Name="textBox" KeyDown="EnterKeyPress" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Margin="4" Background="White" BorderBrush="#FFC8C7CC" FontSize="16" VerticalContentAlignment="Center"/>
         <Button x:Name="addButton" Content="Создать ресторан" Click="AddButtonClick" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Margin="1,2,2,2" Background="White" BorderBrush="#FFC8C7CC" Foreground="#FF007AFF" FontSize="16" FontWeight="SemiBold"/>
     </Grid>
