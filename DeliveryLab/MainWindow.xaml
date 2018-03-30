@@ -9,15 +9,14 @@
     <Window.Resources>
         <!-- Пример картинки на всякий -->
         <Image x:Key="receiverOn" Source="Images/on.png" Height="31" Width="51"/>
-        <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
+        <Style TargetType="DataGridColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="TextBlock.FontWeight" Value="SemiBold"/>
             <Setter Property="Background" Value="#FFF6F6F7"/>
             <Setter Property="BorderThickness" Value="0,0,1,1"/>
             <Setter Property="BorderBrush" Value="#FFC8C7CC"/>
         </Style>
-        <Style x:Key="Body_Content_DataGrid_Centering"
-        TargetType="{x:Type DataGridCell}">
+        <Style TargetType="{x:Type DataGridCell}">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type DataGridCell}">
@@ -62,7 +61,8 @@
             <MenuItem Header="Настройки">
                 <MenuItem x:Name="autoRefreshButton" Header="Автообновление" Click="ToggleAutoRefresh" IsCheckable="True" IsChecked="True"/>
                 <Separator/>
-                <MenuItem x:Name="deleteRestaurantButton" Header="Удалить ресторан" Click="DeleteRestaurantButtonClick" IsEnabled="False" Foreground="#FFFF3B30"/>
+                <MenuItem x:Name="changePassButton" Header="Изменить пароль" Click="ShowChangePasswordWindow" IsEnabled="False"/>
+                <MenuItem x:Name="deleteRestaurantButton" Header="Удалить ресторан" Click="DeleteRestaurantButtonClick" Visibility="Collapsed" Foreground="#FFFF3B30"/>
                 <MenuItem x:Name="deleteAccountButton" Header="Удалить аккаунт" Click="DeleteAccountButtonClick" IsEnabled="False" Foreground="#FFFF3B30"/>
             </MenuItem>
             <MenuItem Header="Справка">
@@ -84,10 +84,10 @@
         <Button x:Name="addDishButton" Content="Добавить блюдо" Click="AddNewDish" Visibility="Collapsed" Grid.Column="0" Grid.Row="4" Margin="2,190,2,0" Height="45" Background="White" BorderBrush="#FFC8C7CC" Foreground="Gray" FontSize="16" VerticalAlignment="Top"/>
         <Button Content="Калькулятор" Click="OpenCalcButtonClick" Grid.Column="0" Grid.Row="4" Margin="2,237,2,0" Height="45" Background="White" BorderBrush="#FFC8C7CC" FontSize="16" VerticalAlignment="Top"/>
 
-        <DataGrid x:Name="table" Grid.Column="2" Grid.Row="4" Margin="2" IsReadOnly="True" AutoGenerateColumns="False" CellStyle="{StaticResource Body_Content_DataGrid_Centering}" Block.TextAlignment="Center" CanUserResizeRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" AlternationCount="1" AlternatingRowBackground="#BFF6F6F7" MinRowHeight="44" RowHeight="44" HorizontalGridLinesBrush="#FFC8C7CC" FontSize="14" VerticalContentAlignment="Center" VerticalGridLinesBrush="#FFB9B9B9" BorderBrush="#FFC8C7CC" Background="White" GridLinesVisibility="All" HeadersVisibility="Column" HorizontalScrollBarVisibility="Disabled">
+        <DataGrid x:Name="table" Grid.Column="2" Grid.Row="4" Margin="2" IsReadOnly="True" AutoGenerateColumns="False" Block.TextAlignment="Center" CanUserResizeRows="False" CanUserReorderColumns="False" AlternationCount="1" AlternatingRowBackground="#BFF6F6F7" MinRowHeight="44" RowHeight="44" HorizontalGridLinesBrush="#FFC8C7CC" FontSize="14" VerticalContentAlignment="Center" VerticalGridLinesBrush="#FFB9B9B9" BorderBrush="#FFC8C7CC" Background="White" GridLinesVisibility="All" HeadersVisibility="Column" HorizontalScrollBarVisibility="Disabled">
             <DataGrid.Columns>
-                <DataGridTextColumn Width="75*" HeaderStyle="{StaticResource CenterGridHeaderStyle}" Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" Header="Название"/>
-                <DataGridTextColumn Width="25*" HeaderStyle="{StaticResource CenterGridHeaderStyle}" Binding="{Binding Price}" ClipboardContentBinding="{x:Null}" Header="Стоимость"/>
+                <DataGridTextColumn Width="75*" Binding="{Binding Name}" Header="Название"/>
+                <DataGridTextColumn Width="25*" Binding="{Binding Price}" Header="Стоимость"/>
             </DataGrid.Columns>
         </DataGrid>
 

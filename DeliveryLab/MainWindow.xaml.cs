@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -54,49 +55,44 @@ namespace DeliveryLab
 		{
 			title.Content = "Меню";
 			table.ItemsSource = Dishes;
-			if (table.Columns.Count > 2) table.Columns.RemoveAt(2);
-			table.Columns[0] = new DataGridTextColumn()
+			table.Columns.Clear();
+			table.Columns.Add(new DataGridTextColumn()
 			{
 				Header = "Название",
 				Binding = new Binding("Name"),
 				Width = new DataGridLength(75, DataGridLengthUnitType.Star),
-				HeaderStyle = (Style)FindResource("CenterGridHeaderStyle")
-			};
-			table.Columns[1] = new DataGridTextColumn()
+			});
+			table.Columns.Add(new DataGridTextColumn()
 			{
 				Header = "Стоимость",
 				Binding = new Binding("Price"),
 				Width = new DataGridLength(25, DataGridLengthUnitType.Star),
-				HeaderStyle = (Style)FindResource("CenterGridHeaderStyle")
-			};
+			});
 		}
 
 		private void ShowRestaurants(object sender, RoutedEventArgs e)
 		{
 			title.Content = "Рестораны";
 			table.ItemsSource = Restaurants;
-			if (table.Columns.Count > 2) table.Columns.RemoveAt(2);
-			table.Columns[0] = new DataGridTextColumn()
+			table.Columns.Clear();
+			table.Columns.Add(new DataGridTextColumn()
 			{
 				Header = "Название",
 				Binding = new Binding("Name"),
 				Width = new DataGridLength(75, DataGridLengthUnitType.Star),
-				HeaderStyle = (Style)FindResource("CenterGridHeaderStyle")
-			};
-			table.Columns[1] = new DataGridCheckBoxColumn()
+			});
+			table.Columns.Add(new DataGridCheckBoxColumn()
 			{
 				Header = "Проверен",
 				Binding = new Binding("IsVerified"),
 				Width = new DataGridLength(12.5, DataGridLengthUnitType.Star),
-				HeaderStyle = (Style)FindResource("CenterGridHeaderStyle")
-			};
+			});
 			table.Columns.Add(
 				new DataGridTextColumn()
 			{
 				Header = "Рейтинг",
 				Binding = new Binding("Rating"),
 				Width = new DataGridLength(12.5, DataGridLengthUnitType.Star),
-				HeaderStyle = (Style)FindResource("CenterGridHeaderStyle")
 			});
 		}
 
@@ -104,48 +100,43 @@ namespace DeliveryLab
 		{
 			title.Content = "Заказы";
 			table.ItemsSource = Orders;
-			if (table.Columns.Count > 2) table.Columns.RemoveAt(2);
-			table.Columns[0] = new DataGridTextColumn()
+			table.Columns.Clear();
+			table.Columns.Add(new DataGridTextColumn()
 			{
 				Header = "Заказ",
 				Binding = new Binding("Name"),
 				Width = new DataGridLength(75, DataGridLengthUnitType.Star),
-				HeaderStyle = (Style)FindResource("CenterGridHeaderStyle")
-			};
-			table.Columns[1] = new DataGridTextColumn()
+			});
+			table.Columns.Add(new DataGridTextColumn()
 			{
 				Header = "Номер заказа",
 				Binding = new Binding("ID"),
 				Width = new DataGridLength(25, DataGridLengthUnitType.Star),
-				HeaderStyle = (Style)FindResource("CenterGridHeaderStyle")
-			};
+			});
 		}
 
 		private void ShowUsers(object sender, RoutedEventArgs e)
 		{
 			title.Content = "Пользователи";
 			table.ItemsSource = Users;
-			if (table.Columns.Count > 2) table.Columns.RemoveAt(2);
-			table.Columns[0] = new DataGridTextColumn()
+			table.Columns.Clear();
+			table.Columns.Add(new DataGridTextColumn()
 			{
 				Header = "ID",
 				Binding = new Binding("ID"),
 				Width = new DataGridLength(10, DataGridLengthUnitType.Star),
-				HeaderStyle = (Style)FindResource("CenterGridHeaderStyle")
-			};
-			table.Columns[1] = new DataGridTextColumn()
+			});
+			table.Columns.Add(new DataGridTextColumn()
 			{
 				Header = "Логин",
 				Binding = new Binding("Login"),
 				Width = new DataGridLength(70, DataGridLengthUnitType.Star),
-				HeaderStyle = (Style)FindResource("CenterGridHeaderStyle")
-			};
+			});
 			table.Columns.Add(new DataGridTextColumn()
 			{
 				Header = "Группа",
 				Binding = new Binding("Group"),
 				Width = new DataGridLength(20, DataGridLengthUnitType.Star),
-				HeaderStyle = (Style)FindResource("CenterGridHeaderStyle")
 			});
 		}
 
@@ -191,6 +182,11 @@ namespace DeliveryLab
 		private void ToggleAutoRefresh(object sender, RoutedEventArgs e)
 		{
 			AutoRefresh = autoRefreshButton.IsChecked = !AutoRefresh;
+		}
+
+		private void ShowChangePasswordWindow(object sender, RoutedEventArgs e)
+		{
+			new ChangePasswordWindow().Show();
 		}
 
 		private void DeleteRestaurantButtonClick(object sender, RoutedEventArgs e)
