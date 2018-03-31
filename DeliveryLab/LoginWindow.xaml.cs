@@ -16,9 +16,10 @@ namespace DeliveryLab
 
 		private void RegisterUser(object sender, RoutedEventArgs e)
 		{
-			if (loginBox.Text.Contains("|"))
+			if (loginBox.Text.Contains(",") || loginBox.Text.Contains(":") || loginBox.Text.Contains("\"") ||
+				loginBox.Text.Contains("{") || loginBox.Text.Contains("}") || loginBox.Text.Contains("[") || loginBox.Text.Contains("]"))
 				new Alert("Неверный логин",
-					"Логин не может содержать символ '|'.").Show();
+					"Логин не может содержать символы\n\",\", \":\", \", \"{\", \"}\", \"[\", \"]\"").Show();
 			else
 			{
 				Type group = Type.User;

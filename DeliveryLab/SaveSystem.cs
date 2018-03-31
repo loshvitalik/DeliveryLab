@@ -40,7 +40,7 @@ namespace DeliveryLab
 				Users = JsonConvert.DeserializeObject<ObservableCollection<User>>(File.ReadAllText(UsersDB, Encoding.Default))
 					?? new ObservableCollection<User>();
 			}
-			catch (JsonReaderException e)
+			catch (JsonReaderException)
 			{
 				new Alert("Неверный формат файла", "Файл должен быть в формате JSON").Show();
 				UsersDB = Path.Combine(Environment.CurrentDirectory, "data\\users.txt");
@@ -86,7 +86,7 @@ namespace DeliveryLab
 				Restaurants = JsonConvert.DeserializeObject<ObservableCollection<Restaurant>>(File.ReadAllText(RestsDB, Encoding.Default))
 					?? new ObservableCollection<Restaurant>();
 			}
-			catch (JsonReaderException e)
+			catch (JsonReaderException)
 			{
 				new Alert("Неверный формат файла", "Файл должен быть в формате JSON").Show();
 				RestsDB = Path.Combine(Environment.CurrentDirectory, "data\\rests.txt");
