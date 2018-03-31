@@ -34,8 +34,17 @@ namespace DeliveryLab
 		private static void LoadUsersFromFile()
 		{
 			Users.Clear();
-			Users = JsonConvert.DeserializeObject<ObservableCollection<User>>(File.ReadAllText(UsersDB, Encoding.Default))
-				?? new ObservableCollection<User>();
+			try
+			{
+				Users = JsonConvert.DeserializeObject<ObservableCollection<User>>(File.ReadAllText(UsersDB, Encoding.Default))
+					?? new ObservableCollection<User>();
+			}
+			catch (JsonReaderException e)
+			{
+				new Alert("Неверный формат файла", "Файл должен быть в формате JSON").Show();
+				UsersDB = Path.Combine(Environment.CurrentDirectory, "data\\users.txt");
+				LoadUsersFromFile();
+			}
 		}
 
 		public static void SaveUsersToFile()
@@ -49,7 +58,8 @@ namespace DeliveryLab
 			var dialog = new OpenFileDialog()
 			{
 				InitialDirectory = Path.Combine(Environment.CurrentDirectory, "data"),
-				FileName = "users.txt", Filter = "Текстовые файлы (*.txt)|*.txt",
+				FileName = "users.txt",
+				Filter = "Текстовые файлы (*.txt)|*.txt",
 				Title = "Загрузить из JSON-файла"
 			};
 			if (dialog.ShowDialog() == true)
@@ -68,8 +78,17 @@ namespace DeliveryLab
 		private static void LoadRestsFromFile()
 		{
 			Restaurants.Clear();
-			Restaurants = JsonConvert.DeserializeObject<ObservableCollection<Restaurant>>(File.ReadAllText(RestsDB, Encoding.Default))
-				?? new ObservableCollection<Restaurant>();
+			try
+			{
+				Restaurants = JsonConvert.DeserializeObject<ObservableCollection<Restaurant>>(File.ReadAllText(RestsDB, Encoding.Default))
+					?? new ObservableCollection<Restaurant>();
+			}
+			catch (JsonReaderException e)
+			{
+				new Alert("Неверный формат файла", "Файл должен быть в формате JSON").Show();
+				RestsDB = Path.Combine(Environment.CurrentDirectory, "data\\rests.txt");
+				LoadRestsFromFile();
+			}
 		}
 
 		public static void SaveRestsToFile()
@@ -83,7 +102,8 @@ namespace DeliveryLab
 			var dialog = new OpenFileDialog()
 			{
 				InitialDirectory = Path.Combine(Environment.CurrentDirectory, "data"),
-				FileName = "rests.txt", Filter = "Текстовые файлы (*.txt)|*.txt",
+				FileName = "rests.txt",
+				Filter = "Текстовые файлы (*.txt)|*.txt",
 				Title = "Загрузить из JSON-файла"
 			};
 			if (dialog.ShowDialog() == true)
