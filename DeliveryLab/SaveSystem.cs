@@ -33,6 +33,7 @@ namespace DeliveryLab
 
 		private static void LoadUsersFromFile()
 		{
+			if (!File.Exists(UsersDB)) File.Create(UsersDB);
 			Users.Clear();
 			try
 			{
@@ -49,6 +50,7 @@ namespace DeliveryLab
 
 		public static void SaveUsersToFile()
 		{
+			if (!File.Exists(UsersDB)) File.Create(UsersDB);
 			File.WriteAllBytes(UsersDB, new byte[0]);
 			File.AppendAllText(UsersDB, JsonConvert.SerializeObject(Users), Encoding.Default);
 		}
@@ -77,6 +79,7 @@ namespace DeliveryLab
 
 		private static void LoadRestsFromFile()
 		{
+			if (!File.Exists(RestsDB)) File.Create(RestsDB);
 			Restaurants.Clear();
 			try
 			{
@@ -93,6 +96,7 @@ namespace DeliveryLab
 
 		public static void SaveRestsToFile()
 		{
+			if (!File.Exists(RestsDB)) File.Create(RestsDB);
 			File.WriteAllBytes(RestsDB, new byte[0]);
 			File.AppendAllText(RestsDB, JsonConvert.SerializeObject(Restaurants), Encoding.Default);
 		}
