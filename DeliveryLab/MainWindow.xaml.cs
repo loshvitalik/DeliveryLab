@@ -108,30 +108,34 @@ namespace DeliveryLab
 
 		private void ShowOrder(object sender, RoutedEventArgs e)
 		{
-			//CurrentUser.Order = new Order();
-			title.Content = "Заказ";
-			table.ItemsSource = CurrentUser.Order.Items;
-			addRowToOrder.Visibility = Visibility.Collapsed;
-			deleteRowButton.Visibility = Visibility.Visible;
-			table.Columns.Clear();
-			table.Columns.Add(new DataGridTextColumn()
+			if (CurrentUser.Group == Type.Restaurant)
+				return;
+			else
 			{
-				Header = "Название",
-				Binding = new Binding("Item.Name"),
-				Width = new DataGridLength(50, DataGridLengthUnitType.Star),
-			});
-			table.Columns.Add(new DataGridTextColumn()
-			{
-				Header = "Количество",
-				Binding = new Binding("Count"),
-				Width = new DataGridLength(25, DataGridLengthUnitType.Star),
-			});
-			table.Columns.Add(new DataGridTextColumn()
-			{
-				Header = "Стоимость",
-				Binding = new Binding("Sum"),
-				Width = new DataGridLength(25, DataGridLengthUnitType.Star),
-			});
+				title.Content = "Заказ";
+				table.ItemsSource = CurrentUser.Order.Items;
+				addRowToOrder.Visibility = Visibility.Collapsed;
+				deleteRowButton.Visibility = Visibility.Visible;
+				table.Columns.Clear();
+				table.Columns.Add(new DataGridTextColumn()
+				{
+					Header = "Название",
+					Binding = new Binding("Item.Name"),
+					Width = new DataGridLength(50, DataGridLengthUnitType.Star),
+				});
+				table.Columns.Add(new DataGridTextColumn()
+				{
+					Header = "Количество",
+					Binding = new Binding("Count"),
+					Width = new DataGridLength(25, DataGridLengthUnitType.Star),
+				});
+				table.Columns.Add(new DataGridTextColumn()
+				{
+					Header = "Стоимость",
+					Binding = new Binding("Sum"),
+					Width = new DataGridLength(25, DataGridLengthUnitType.Star),
+				});
+			}
 
 		}
 

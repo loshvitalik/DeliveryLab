@@ -25,7 +25,8 @@ namespace DeliveryLab
 			Group = group;
 			Login = login;
 			Password = password;
-			Order = new Order();
+			if (group != Type.Restaurant)
+				Order = new Order();
 		}
 
 		[JsonConstructor]
