@@ -17,6 +17,7 @@ namespace DeliveryLab
 		public Type Group { get; private set; }
 		public string Login { get; set; }
 		public string Password { get; set; }
+		public Order Order { get; set; }
 
 		public User(Type group, string login, string password)
 		{
@@ -24,15 +25,17 @@ namespace DeliveryLab
 			Group = group;
 			Login = login;
 			Password = password;
+			Order = new Order();
 		}
 
 		[JsonConstructor]
-		public User(int id, Type group, string login, string password)
+		public User(int id, Type group, string login, string password, Order order)
 		{
 			ID = id;
 			Group = group;
 			Login = login;
 			Password = password;
+			Order = order;
 		}
 	}
 }

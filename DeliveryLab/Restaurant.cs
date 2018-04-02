@@ -23,6 +23,7 @@ namespace DeliveryLab
 		public string Name { get; private set; }
 		public int OwnerID { get; private set; }
 		public bool IsVerified { get; set; }
+		public List<Order> Orders;
 		public List<Dish> Dishes;
 
 		public Restaurant(string name, User owner)
@@ -31,11 +32,12 @@ namespace DeliveryLab
 			Name = name;
 			OwnerID = owner.ID;
 			Rating = 0;
+			Orders = new List<Order>();
 			Dishes = new List<Dish>();
 		}
 
 		[JsonConstructor]
-		private Restaurant(int id, int ownerID, string name, int rating, bool isVerified, List<Dish> dishes)
+		private Restaurant(int id, int ownerID, string name, int rating, bool isVerified, List<Dish> dishes, List<Order> orders)
 		{
 			ID = id;
 			OwnerID = ownerID;
@@ -43,6 +45,7 @@ namespace DeliveryLab
 			Rating = rating;
 			IsVerified = isVerified;
 			Dishes = dishes;
+			Orders = orders;
 		}
 
 		public void UpdateDishes(List<Dish> dishes)

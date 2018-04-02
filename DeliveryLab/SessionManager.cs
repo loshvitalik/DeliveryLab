@@ -55,9 +55,11 @@ namespace DeliveryLab
 			Window.deleteRestaurantButton.Visibility = Visibility.Collapsed;
 			Window.deleteAccountButton.IsEnabled = false;
 			Window.adminMenu.Visibility = Visibility.Collapsed;
-			Window.showOrders.Visibility = Visibility.Collapsed;
+			Window.showOrder.Visibility = Visibility.Collapsed;
 			Window.showUsers.Visibility = Visibility.Collapsed;
 			Window.addDishButton.Visibility = Visibility.Collapsed;
+			Window.addRowToOrder.IsEnabled = false;
+			Window.deleteRowButton.IsEnabled = false;
 		}
 
 		public static void ChangePassword(string oldPassword, string newPassword)
@@ -71,15 +73,19 @@ namespace DeliveryLab
 				new Alert("Пароли не совпадают", "Текущий пароль введён неверно").Show();
 		}
 
-		public static void DeleteAccount()
+		public static void DeleteAccount(User userToDelete)
 		{
-			Users.Remove(Users.Where(u => u.ID == CurrentUser.ID).First());
-			if (CurrentUser.Group == Type.Restaurant)
+			if (userToDelete.ID == CurrentUser.ID)
+				LogOut();
+			Users.Remove(Users.Where(u => u.ID == userToDelete.ID).First());
+			if (userToDelete.Group == Type.Restaurant)
+			{
 				foreach (Restaurant r in Restaurants.ToList())
-					if (r.OwnerID == CurrentUser.ID) Restaurants.Remove(r);
-			UpdateMenu();
+					if (r.OwnerID == userToDelete.ID) Restaurants.Remove(r);
+				if (AutoRefresh)
+					UpdateMenu();
+			}
 			SaveSystem.SaveAll();
-			LogOut();
 		}
 
 		public static void AddRestaurant(string name)
@@ -95,7 +101,8 @@ namespace DeliveryLab
 		{
 			Restaurants.Remove(Restaurants.Where(r => r.OwnerID == CurrentUser.ID).FirstOrDefault());
 			SaveSystem.SaveRestsToFile();
-			UpdateMenu();
+			if (AutoRefresh)
+				UpdateMenu();
 			CurrentRestaurant = Restaurants.Where(r => r.OwnerID == CurrentUser.ID).FirstOrDefault();
 			if (CurrentRestaurant == null)
 				new AddRestaurantWindow().Show();
@@ -107,7 +114,9 @@ namespace DeliveryLab
 			Window.loginButton.Foreground = new SolidColorBrush(Color.FromRgb(0, 122, 255));
 			Window.changePassButton.IsEnabled = true;
 			Window.deleteAccountButton.IsEnabled = true;
-			Window.showOrders.Visibility = Visibility.Visible;
+			Window.showOrder.Visibility = Visibility.Visible;
+			Window.addRowToOrder.IsEnabled = true;
+			Window.deleteRowButton.IsEnabled = true;
 		}
 
 		private static void SetAdminRights()
@@ -115,6 +124,7 @@ namespace DeliveryLab
 			Window.Title = "Delivery Lab — Администратор";
 			Window.adminMenu.Visibility = Visibility.Visible;
 			Window.showUsers.Visibility = Visibility.Visible;
+			Window.deleteRowButton.Visibility = Visibility.Visible;
 		}
 
 		private static void SetRestaurantRights()

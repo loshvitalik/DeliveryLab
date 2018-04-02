@@ -1,10 +1,11 @@
-﻿using System;
-using System.Text;
-using System.IO;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using Newtonsoft.Json;
-using static DeliveryLab.MainWindow;
+using System;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Text;
+using System.Threading;
+using static DeliveryLab.MainWindow;
 
 namespace DeliveryLab
 {
@@ -12,6 +13,16 @@ namespace DeliveryLab
 	{
 		private static string UsersDB = Path.Combine(Environment.CurrentDirectory, "data\\users.txt");
 		private static string RestsDB = Path.Combine(Environment.CurrentDirectory, "data\\rests.txt");
+
+		public static void CreateFilesIfNotPresent()
+		{
+			if (!Directory.Exists(Path.Combine(Environment.CurrentDirectory, "data")))
+				Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, "data"));
+			if (!File.Exists(UsersDB))
+				File.Create(UsersDB).Close();
+			if (!File.Exists(RestsDB))
+				File.Create(RestsDB).Close();
+		}
 
 		public static void LoadAll()
 		{
