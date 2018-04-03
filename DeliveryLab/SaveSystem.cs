@@ -13,6 +13,7 @@ namespace DeliveryLab
 	{
 		private static string UsersDB = Path.Combine(Environment.CurrentDirectory, "data\\users.txt");
 		private static string RestsDB = Path.Combine(Environment.CurrentDirectory, "data\\rests.txt");
+		private static string DishesDB = Path.Combine(Environment.CurrentDirectory, "data\\dishes.txt");
 
 		public static void CreateFilesIfNotPresent()
 		{
@@ -22,29 +23,33 @@ namespace DeliveryLab
 				File.Create(UsersDB).Close();
 			if (!File.Exists(RestsDB))
 				File.Create(RestsDB).Close();
+			if (!File.Exists(DishesDB))
+				File.Create(DishesDB).Close();
 		}
 
 		public static void LoadAll()
 		{
 			LoadUsersFromFile();
 			LoadRestsFromFile();
+			LoadDishesFromFile();
 		}
 
 		public static void SaveAll()
 		{
 			SaveUsersToFile();
 			SaveRestsToFile();
+			SaveDishesToFile();
 		}
 
 		public static void ClearAll()
 		{
 			ClearUsers();
 			ClearRests();
+			ClearDishes();
 		}
 
 		private static void LoadUsersFromFile()
 		{
-			if (!File.Exists(UsersDB)) File.Create(UsersDB);
 			Users.Clear();
 			try
 			{
@@ -55,13 +60,11 @@ namespace DeliveryLab
 			{
 				new Alert("Неверный формат файла", "Файл должен быть в формате JSON").Show();
 				UsersDB = Path.Combine(Environment.CurrentDirectory, "data\\users.txt");
-				LoadUsersFromFile();
 			}
 		}
 
 		public static void SaveUsersToFile()
 		{
-			if (!File.Exists(UsersDB)) File.Create(UsersDB);
 			File.WriteAllBytes(UsersDB, new byte[0]);
 			File.AppendAllText(UsersDB, JsonConvert.SerializeObject(Users), Encoding.Default);
 		}
@@ -90,7 +93,6 @@ namespace DeliveryLab
 
 		private static void LoadRestsFromFile()
 		{
-			if (!File.Exists(RestsDB)) File.Create(RestsDB);
 			Restaurants.Clear();
 			try
 			{
@@ -101,13 +103,11 @@ namespace DeliveryLab
 			{
 				new Alert("Неверный формат файла", "Файл должен быть в формате JSON").Show();
 				RestsDB = Path.Combine(Environment.CurrentDirectory, "data\\rests.txt");
-				LoadRestsFromFile();
 			}
 		}
 
 		public static void SaveRestsToFile()
 		{
-			if (!File.Exists(RestsDB)) File.Create(RestsDB);
 			File.WriteAllBytes(RestsDB, new byte[0]);
 			File.AppendAllText(RestsDB, JsonConvert.SerializeObject(Restaurants), Encoding.Default);
 		}
@@ -130,6 +130,33 @@ namespace DeliveryLab
 		{
 			Restaurants.Clear();
 			SaveRestsToFile();
+		}
+
+		public static void LoadDishesFromFile()
+		{
+			Dishes.Clear();
+			try
+			{
+				Dishes = JsonConvert.DeserializeObject<ObservableCollection<Dish>>(File.ReadAllText(DishesDB, Encoding.Default))
+					?? new ObservableCollection<Dish>();
+			}
+			catch (JsonReaderException)
+			{
+				new Alert("Неверный формат файла", "Файл должен быть в формате JSON").Show();
+				DishesDB = Path.Combine(Environment.CurrentDirectory, "data\\dishes.txt");
+			}
+		}
+
+		public static void SaveDishesToFile()
+		{
+			File.WriteAllBytes(DishesDB, new byte[0]);
+			File.AppendAllText(DishesDB, JsonConvert.SerializeObject(Dishes), Encoding.Default);
+		}
+
+		private static void ClearDishes()
+		{
+			Dishes.Clear();
+			SaveDishesToFile();
 		}
 	}
 }

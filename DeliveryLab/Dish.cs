@@ -13,10 +13,12 @@ namespace DeliveryLab
 				else price = value;
 			}
 		}
+		public Restaurant Restaurant { get; private set; }
 		public string Name { get; private set; }
 
-		public Dish(string name, double price)
+		public Dish(Restaurant restaurant, string name, double price)
 		{
+			Restaurant = restaurant;
 			Name = name;
 			Price = price;
 		}

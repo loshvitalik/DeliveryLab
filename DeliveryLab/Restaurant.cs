@@ -2,6 +2,7 @@
 using System.Linq;
 using Newtonsoft.Json;
 using static DeliveryLab.MainWindow;
+using System.Globalization;
 
 namespace DeliveryLab
 {
@@ -24,7 +25,6 @@ namespace DeliveryLab
 		public int OwnerID { get; private set; }
 		public bool IsVerified { get; set; }
 		public List<Order> Orders;
-		public List<Dish> Dishes;
 
 		public Restaurant(string name, User owner)
 		{
@@ -33,7 +33,6 @@ namespace DeliveryLab
 			OwnerID = owner.ID;
 			Rating = 0;
 			Orders = new List<Order>();
-			Dishes = new List<Dish>();
 		}
 
 		[JsonConstructor]
@@ -44,16 +43,32 @@ namespace DeliveryLab
 			Name = name;
 			Rating = rating;
 			IsVerified = isVerified;
-			Dishes = dishes;
 			Orders = orders;
 		}
 
-		public void UpdateDishes(List<Dish> dishes)
+		public void UpdateDishes(List<string> dishes)
 		{
-			Dishes = dishes;
-			SaveSystem.SaveRestsToFile();
-			if (AutoRefresh)
-				UpdateMenu();
+			foreach (Dish d in Dishes.ToList())
+				if (d.Restaurant == this)
+					Dishes.Remove(d);
+			foreach (string d in dishes)
+			{
+				string[] dish = d.Split('|');
+				if (dish.Length == 2)
+					Dishes.Add(new Dish(this, dish[0], double.Parse(dish[1], CultureInfo.InvariantCulture)));
+			}
+			SaveSystem.SaveDishesToFile();
+		}
+
+		public void AddDishes(List<string> dishes)
+		{
+			foreach (string d in dishes)
+			{
+				string[] dish = d.Split('|');
+				if (dish.Length == 2)
+					Dishes.Add(new Dish(this, dish[0], double.Parse(dish[1], CultureInfo.InvariantCulture)));
+			}
+			SaveSystem.SaveDishesToFile();
 		}
 	}
 }

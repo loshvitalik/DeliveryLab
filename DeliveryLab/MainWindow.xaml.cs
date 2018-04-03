@@ -30,15 +30,6 @@ namespace DeliveryLab
 			SaveSystem.LoadAll();
 			table.ItemsSource = Dishes;
 			ShowMenu("", new RoutedEventArgs());
-			UpdateMenu();
-		}
-
-		public static void UpdateMenu()
-		{
-			Dishes.Clear();
-			foreach (var rest in Restaurants)
-				foreach (var dish in rest.Dishes)
-					Dishes.Add(dish);
 		}
 
 		private void LoginButtonClick(object sender, RoutedEventArgs e)
@@ -54,20 +45,20 @@ namespace DeliveryLab
 		{
 			title.Content = "Меню";
 			table.ItemsSource = Dishes;
-			addRowToOrder.Visibility = Visibility.Visible;
+			addRowToOrder.Visibility = CurrentUser?.Group != Type.Restaurant ? Visibility.Visible : Visibility.Collapsed;
 			deleteRowButton.Visibility = CurrentUser?.Group == Type.Administrator ? Visibility.Visible : Visibility.Collapsed;
 			table.Columns.Clear();
-			table.Columns.Add(new DataGridTextColumn()
-			{
-				Header = "Ресторан",
-				Binding = new Binding("Restaurant"),
-				Width = new DataGridLength(25, DataGridLengthUnitType.Star),
-			});
 			table.Columns.Add(new DataGridTextColumn()
 			{
 				Header = "Название",
 				Binding = new Binding("Name"),
 				Width = new DataGridLength(50, DataGridLengthUnitType.Star),
+			});
+			table.Columns.Add(new DataGridTextColumn()
+			{
+				Header = "Ресторан",
+				Binding = new Binding("Restaurant.Name"),
+				Width = new DataGridLength(25, DataGridLengthUnitType.Star),
 			});
 			table.Columns.Add(new DataGridTextColumn()
 			{
@@ -83,26 +74,26 @@ namespace DeliveryLab
 			title.Content = "Рестораны";
 			table.ItemsSource = Restaurants;
 			addRowToOrder.Visibility = Visibility.Collapsed;
-			deleteRowButton.Visibility = CurrentUser?.Group == Type.Administrator ? Visibility.Visible : Visibility.Collapsed;
+			deleteRowButton.Visibility = CurrentUser?.Group != Type.User ? Visibility.Visible : Visibility.Collapsed;
 			table.Columns.Clear();
+			table.Columns.Add(new DataGridCheckBoxColumn()
+			{
+				Header = "Проверен",
+				Binding = new Binding("IsVerified"),
+				Width = new DataGridLength(15, DataGridLengthUnitType.Star),
+			});
 			table.Columns.Add(new DataGridTextColumn()
 			{
 				Header = "Название",
 				Binding = new Binding("Name"),
 				Width = new DataGridLength(50, DataGridLengthUnitType.Star),
 			});
-			table.Columns.Add(new DataGridCheckBoxColumn()
-			{
-				Header = "Проверен",
-				Binding = new Binding("IsVerified"),
-				Width = new DataGridLength(25, DataGridLengthUnitType.Star),
-			});
 			table.Columns.Add(
 				new DataGridTextColumn()
 				{
 					Header = "Рейтинг",
 					Binding = new Binding("Rating"),
-					Width = new DataGridLength(25, DataGridLengthUnitType.Star),
+					Width = new DataGridLength(35, DataGridLengthUnitType.Star),
 				});
 		}
 
@@ -117,6 +108,12 @@ namespace DeliveryLab
 				addRowToOrder.Visibility = Visibility.Collapsed;
 				deleteRowButton.Visibility = Visibility.Visible;
 				table.Columns.Clear();
+				table.Columns.Add(new DataGridCheckBoxColumn()
+				{
+					Header = "Готовность",
+					Binding = new Binding("IsReady"),
+					Width = new DataGridLength(15, DataGridLengthUnitType.Star),
+				});
 				table.Columns.Add(new DataGridTextColumn()
 				{
 					Header = "Название",
@@ -125,9 +122,9 @@ namespace DeliveryLab
 				});
 				table.Columns.Add(new DataGridTextColumn()
 				{
-					Header = "Количество",
+					Header = "Кол-во",
 					Binding = new Binding("Count"),
-					Width = new DataGridLength(25, DataGridLengthUnitType.Star),
+					Width = new DataGridLength(10, DataGridLengthUnitType.Star),
 				});
 				table.Columns.Add(new DataGridTextColumn()
 				{
@@ -150,27 +147,27 @@ namespace DeliveryLab
 			{
 				Header = "ID",
 				Binding = new Binding("ID"),
-				Width = new DataGridLength(10, DataGridLengthUnitType.Star),
+				Width = new DataGridLength(15, DataGridLengthUnitType.Star),
 			});
 			table.Columns.Add(new DataGridTextColumn()
 			{
 				Header = "Логин",
 				Binding = new Binding("Login"),
-				Width = new DataGridLength(60, DataGridLengthUnitType.Star),
+				Width = new DataGridLength(50, DataGridLengthUnitType.Star),
 			});
 			table.Columns.Add(new DataGridTextColumn()
 			{
 				Header = "Группа",
 				Binding = new Binding("Group"),
-				Width = new DataGridLength(30, DataGridLengthUnitType.Star),
+				Width = new DataGridLength(35, DataGridLengthUnitType.Star),
 			});
 		}
 
 		private void AddNewDish(object sender, RoutedEventArgs e)
 		{
 			if (CurrentUser?.Group == Type.Restaurant)
-				CurrentRestaurant.UpdateDishes(new List<Dish>()
-				{ new Dish("Рандомная еда", new Random().Next(0, 10000)) });
+				CurrentRestaurant.AddDishes(new List<string>()
+				{ "Рандомная еда|" + new Random().Next(0, 10000) });
 		}
 
 		private void OpenCalcButtonClick(object sender, RoutedEventArgs e)
@@ -210,9 +207,9 @@ namespace DeliveryLab
 			AutoRefresh = autoRefreshButton.IsChecked = !AutoRefresh;
 		}
 
-		private void UpdateMenuButtonClick(object sender, RoutedEventArgs e)
+		private void UpdateViewButtonClick(object sender, RoutedEventArgs e)
 		{
-			UpdateMenu();
+			table.Items.Refresh();
 		}
 
 		private void ShowChangePasswordWindow(object sender, RoutedEventArgs e)
@@ -222,7 +219,7 @@ namespace DeliveryLab
 
 		private void DeleteRestaurantButtonClick(object sender, RoutedEventArgs e)
 		{
-			SessionManager.DeleteRestaurant();
+			SessionManager.DeleteRestaurant(CurrentRestaurant);
 		}
 
 		private void DeleteAccountButtonClick(object sender, RoutedEventArgs e)
@@ -255,9 +252,11 @@ namespace DeliveryLab
 			var selectedItem = table.SelectedItem;
 			if (selectedItem is Dish && CurrentUser.Group == Type.Administrator)
 				Dishes.Remove((Dish)selectedItem);
-			if (selectedItem is Restaurant && CurrentUser.Group == Type.Administrator)
-				Restaurants.Remove((Restaurant)selectedItem);
-			if (selectedItem is OrderItem)
+			if (selectedItem is Restaurant && 
+				(CurrentUser.Group == Type.Administrator ||
+				(CurrentUser.Group == Type.Restaurant && CurrentRestaurant.OwnerID == CurrentUser.ID)))
+				SessionManager.DeleteRestaurant((Restaurant)selectedItem);
+			if (selectedItem is OrderItem && CurrentUser.Group != Type.Restaurant)
 				CurrentUser.Order.Remove(((OrderItem)selectedItem).Item);
 			if (selectedItem is User && CurrentUser.Group == Type.Administrator)
 				SessionManager.DeleteAccount((User)selectedItem);

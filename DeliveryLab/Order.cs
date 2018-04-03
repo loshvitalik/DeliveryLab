@@ -43,6 +43,7 @@ namespace DeliveryLab
 		public Dish Item { get; set; }
 		public int Count { get; set; }
 		public double Sum { get; set; }
+		public bool IsReady { get; set; }
 
 		public OrderItem(Dish item)
 		{

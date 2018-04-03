@@ -58,8 +58,8 @@ namespace DeliveryLab
 			Window.showOrder.Visibility = Visibility.Collapsed;
 			Window.showUsers.Visibility = Visibility.Collapsed;
 			Window.addDishButton.Visibility = Visibility.Collapsed;
-			Window.addRowToOrder.IsEnabled = false;
-			Window.deleteRowButton.IsEnabled = false;
+			Window.addRowToOrder.Visibility = Visibility.Collapsed;
+			Window.deleteRowButton.Visibility = Visibility.Collapsed;
 		}
 
 		public static void ChangePassword(string oldPassword, string newPassword)
@@ -80,10 +80,10 @@ namespace DeliveryLab
 			Users.Remove(Users.Where(u => u.ID == userToDelete.ID).First());
 			if (userToDelete.Group == Type.Restaurant)
 			{
+				foreach (Dish d in Dishes.ToList())
+					if (d.Restaurant == CurrentRestaurant) Dishes.Remove(d);
 				foreach (Restaurant r in Restaurants.ToList())
 					if (r.OwnerID == userToDelete.ID) Restaurants.Remove(r);
-				if (AutoRefresh)
-					UpdateMenu();
 			}
 			SaveSystem.SaveAll();
 		}
@@ -97,14 +97,15 @@ namespace DeliveryLab
 			SetRestaurantRights();
 		}
 
-		public static void DeleteRestaurant()
+		public static void DeleteRestaurant(Restaurant restaurantToDelete)
 		{
-			Restaurants.Remove(Restaurants.Where(r => r.OwnerID == CurrentUser.ID).FirstOrDefault());
+			foreach (Dish d in Dishes.ToList())
+				if (d.Restaurant == restaurantToDelete) Dishes.Remove(d);
+			Restaurants.Remove(restaurantToDelete);
 			SaveSystem.SaveRestsToFile();
-			if (AutoRefresh)
-				UpdateMenu();
+			SaveSystem.SaveDishesToFile();
 			CurrentRestaurant = Restaurants.Where(r => r.OwnerID == CurrentUser.ID).FirstOrDefault();
-			if (CurrentRestaurant == null)
+			if (CurrentRestaurant == null && restaurantToDelete.OwnerID == CurrentUser.ID)
 				new AddRestaurantWindow().Show();
 		}
 
@@ -115,8 +116,7 @@ namespace DeliveryLab
 			Window.changePassButton.IsEnabled = true;
 			Window.deleteAccountButton.IsEnabled = true;
 			Window.showOrder.Visibility = Visibility.Visible;
-			Window.addRowToOrder.IsEnabled = true;
-			Window.deleteRowButton.IsEnabled = true;
+			Window.addRowToOrder.Visibility = Visibility.Visible;
 		}
 
 		private static void SetAdminRights()
