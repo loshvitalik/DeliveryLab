@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
@@ -8,13 +7,13 @@ using static DeliveryLab.MainWindow;
 
 namespace DeliveryLab
 {
-	class SessionManager
+	internal class SessionManager
 	{
 		private static readonly MainWindow Window = Application.Current.MainWindow as MainWindow;
 
 		public static void RegisterUser(Type group, string login, string password)
 		{
-			string encryptedPass = EncryptString(password);
+			var encryptedPass = EncryptString(password);
 			Users.Add(new User(group, login, encryptedPass));
 			SaveSystem.SaveUsersToFile();
 			LogIn(login, password);
@@ -23,7 +22,7 @@ namespace DeliveryLab
 		public static void LogIn(string login, string password)
 		{
 			string encryptedPass = EncryptString(password);
-			foreach (User u in Users)
+			foreach (var u in Users)
 				if (login == u.Login)
 				{
 					if (encryptedPass == u.Password)
@@ -35,6 +34,7 @@ namespace DeliveryLab
 						if (CurrentUser.Group == Type.Restaurant)
 							SetRestaurantRights();
 					}
+
 					break;
 				}
 
@@ -68,7 +68,7 @@ namespace DeliveryLab
 		{
 			if (EncryptString(oldPassword) == CurrentUser.Password)
 			{
-				CurrentUser.Password = Users.First(u => u.ID == CurrentUser.ID).Password = EncryptString(newPassword);
+				CurrentUser.Password = Users.First(u => u.Id == CurrentUser.Id).Password = EncryptString(newPassword);
 				SaveSystem.SaveUsersToFile();
 			}
 			else
@@ -79,16 +79,16 @@ namespace DeliveryLab
 		{
 			if (userToDelete.Group == Type.Restaurant)
 			{
-				foreach (var d in Dishes.Where(d => d.RestID == CurrentRestaurant.ID).ToArray())
+				foreach (var d in Dishes.Where(d => d.RestId == CurrentRestaurant.Id).ToArray())
 					Dishes.Remove(d);
-				foreach (var r in Restaurants.Where(r => r.OwnerID == userToDelete.ID).ToArray())
+				foreach (var r in Restaurants.Where(r => r.OwnerId == userToDelete.Id).ToArray())
 					Restaurants.Remove(r);
 			}
 
-			if (userToDelete.ID == CurrentUser.ID)
+			if (userToDelete.Id == CurrentUser.Id)
 				LogOut();
-			Users.Remove(Users.First(u => u.ID == userToDelete.ID));
-			foreach (var i in Orders.Items.Where(i => i.UserID == userToDelete.ID))
+			Users.Remove(Users.First(u => u.Id == userToDelete.Id));
+			foreach (var i in Orders.Items.Where(i => i.UserId == userToDelete.Id))
 				Orders.Items.Remove(i);
 			SaveSystem.SaveAll();
 		}
@@ -104,14 +104,14 @@ namespace DeliveryLab
 
 		public static void DeleteRestaurant(Restaurant restaurantToDelete)
 		{
-			foreach (Dish d in Dishes.ToList())
-				if (d.RestID == restaurantToDelete.ID)
+			foreach (var d in Dishes.ToList())
+				if (d.RestId == restaurantToDelete.Id)
 					Dishes.Remove(d);
 			Restaurants.Remove(restaurantToDelete);
 			SaveSystem.SaveRestsToFile();
 			SaveSystem.SaveDishesToFile();
-			CurrentRestaurant = Restaurants.FirstOrDefault(r => r.OwnerID == CurrentUser.ID);
-			if (CurrentRestaurant == null && restaurantToDelete.OwnerID == CurrentUser.ID)
+			CurrentRestaurant = Restaurants.FirstOrDefault(r => r.OwnerId == CurrentUser.Id);
+			if (CurrentRestaurant == null && restaurantToDelete.OwnerId == CurrentUser.Id)
 				new AddRestaurantWindow().Show();
 		}
 
@@ -137,7 +137,7 @@ namespace DeliveryLab
 
 		private static void SetRestaurantRights()
 		{
-			CurrentRestaurant = Restaurants.FirstOrDefault(r => r.OwnerID == CurrentUser.ID);
+			CurrentRestaurant = Restaurants.FirstOrDefault(r => r.OwnerId == CurrentUser.Id);
 			if (CurrentRestaurant == null)
 				new AddRestaurantWindow().Show();
 			else
@@ -153,7 +153,7 @@ namespace DeliveryLab
 
 		public static string EncryptString(string password)
 		{
-			byte[] hash = SHA1.Create().ComputeHash(Encoding.Default.GetBytes(password));
+			var hash = SHA1.Create().ComputeHash(Encoding.Default.GetBytes(password));
 			var builder = new StringBuilder();
 			foreach (var b in hash)
 				builder.Append(b.ToString("x2"));

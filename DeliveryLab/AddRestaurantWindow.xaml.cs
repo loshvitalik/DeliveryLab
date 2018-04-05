@@ -18,8 +18,10 @@ namespace DeliveryLab
 			if (textBox.Text.Contains(",") || textBox.Text.Contains(":") || textBox.Text.Contains("\"") ||
 			    textBox.Text.Contains("{") || textBox.Text.Contains("}") || textBox.Text.Contains("[") ||
 			    textBox.Text.Contains("]"))
+			{
 				new Alert("Неверный логин",
 					"Логин не может содержать символы\n\",\", \":\", \", \"{\", \"}\", \"[\", \"]\"").Show();
+			}
 			else
 			{
 				SessionManager.AddRestaurant(textBox.Text);

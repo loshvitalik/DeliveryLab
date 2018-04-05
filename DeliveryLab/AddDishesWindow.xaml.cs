@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
-using System.Windows.Media.Animation;
 using static DeliveryLab.MainWindow;
 
 namespace DeliveryLab
@@ -26,7 +23,7 @@ namespace DeliveryLab
 			return text.Split(new[] {'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries).ToList();
 		}
 
-	private void ReplaceButtonClick(object sender, RoutedEventArgs e)
+		private void ReplaceButtonClick(object sender, RoutedEventArgs e)
 		{
 			CurrentRestaurant.ReplaceDishes(GetStingsFromText());
 			Close();

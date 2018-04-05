@@ -1,14 +1,14 @@
-﻿using Microsoft.Win32;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
+using Microsoft.Win32;
+using Newtonsoft.Json;
 using static DeliveryLab.MainWindow;
 
 namespace DeliveryLab
 {
-	class SaveSystem
+	internal class SaveSystem
 	{
 		private static string UsersDB = Path.Combine(Environment.CurrentDirectory, "data\\users.txt");
 		private static string RestsDB = Path.Combine(Environment.CurrentDirectory, "data\\rests.txt");
@@ -67,7 +67,7 @@ namespace DeliveryLab
 
 		public static void SetUsersFileName()
 		{
-			var dialog = new OpenFileDialog()
+			var dialog = new OpenFileDialog
 			{
 				InitialDirectory = Path.Combine(Environment.CurrentDirectory, "data"),
 				FileName = "users.txt",
@@ -103,7 +103,7 @@ namespace DeliveryLab
 
 		public static void SetRestsFileName()
 		{
-			var dialog = new OpenFileDialog()
+			var dialog = new OpenFileDialog
 			{
 				InitialDirectory = Path.Combine(Environment.CurrentDirectory, "data"),
 				FileName = "rests.txt",

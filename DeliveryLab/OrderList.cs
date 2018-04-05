@@ -16,7 +16,7 @@ namespace DeliveryLab
 
 		public void Add(Dish item)
 		{
-			var orderItem = Items.FirstOrDefault(i => i.Item == item && i.UserID == CurrentUser.ID);
+			var orderItem = Items.FirstOrDefault(i => i.Item == item && i.UserId == CurrentUser.Id);
 			if (orderItem != null)
 			{
 				orderItem.Count++;
@@ -29,30 +29,23 @@ namespace DeliveryLab
 		public void Remove(Dish item)
 		{
 			var orderItem = Items.FirstOrDefault(i =>
-				i.Item == item && (i.UserID == CurrentUser.ID || CurrentUser.Group == Type.Administrator));
-			if (orderItem != null)
-				if (orderItem.Count == 1)
-					Items.Remove(orderItem);
-				else
-				{
-					orderItem.Count--;
-					orderItem.Sum -= orderItem.Item.Price;
-				}
+				i.Item == item && (i.UserId == CurrentUser.Id || CurrentUser.Group == Type.Administrator));
+			if (orderItem == null) return;
+			if (orderItem.Count == 1)
+				Items.Remove(orderItem);
+			else
+			{
+				orderItem.Count--;
+				orderItem.Sum -= orderItem.Item.Price;
+			}
 		}
 	}
 
 	public class OrderItem
 	{
-		public int UserID { get; }
-		public string UserName { get; }
-		public Dish Item { get; }
-		public int Count { get; set; }
-		public double Sum { get; set; }
-		public bool IsReady { get; set; }
-
 		public OrderItem(Dish item)
 		{
-			UserID = CurrentUser.ID;
+			UserId = CurrentUser.Id;
 			UserName = CurrentUser.Login;
 			Item = item;
 			Count = 1;
@@ -60,13 +53,20 @@ namespace DeliveryLab
 		}
 
 		[JsonConstructor]
-		private OrderItem(int userID, string userName, Dish item, int count, double sum)
+		private OrderItem(int userId, string userName, Dish item, int count, double sum)
 		{
-			UserID = userID;
+			UserId = userId;
 			UserName = userName;
 			Item = item;
 			Count = count;
 			Sum = sum;
 		}
+
+		public int UserId { get; }
+		public string UserName { get; }
+		public Dish Item { get; }
+		public int Count { get; set; }
+		public double Sum { get; set; }
+		public bool IsReady { get; set; }
 	}
 }

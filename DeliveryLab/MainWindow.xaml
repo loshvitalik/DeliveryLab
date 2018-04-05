@@ -4,9 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Delivery Lab" Height="600" MinHeight="480" Width="900" MinWidth="640" ResizeMode="CanResize" Background="#FFEFEFF4" WindowStyle="ThreeDBorderWindow">
+        Title="Delivery Lab" Height="600" MinHeight="480" Width="900" MinWidth="640" Background="#FFEFEFF4" WindowStyle="ThreeDBorderWindow">
     <Window.Resources>
-        <!-- Пример картинки на всякий -->
+        <Style TargetType="Button">
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#FFC8C7CC"/>
+            <Setter Property="Foreground" Value="#FF007AFF"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+        <Style TargetType="Rectangle">
+            <Setter Property="Fill" Value="#FFA7A7AB"/>
+        </Style>
         <Style TargetType="DataGridColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="TextBlock.FontWeight" Value="SemiBold"/>
@@ -48,7 +57,7 @@
                 <Separator/>
                 <MenuItem Header="Загрузить пользователей из файла" Click="LoadUsersButtonClick"/>
                 <MenuItem Header="Загрузить рестораны из файла" Click="LoadRestsButtonClick"/>
-                <MenuItem Header="Сохранить всё" Click="SaveAllButtonClick"/>
+                <MenuItem Header="Сохранить всё в файлы" Click="SaveAllButtonClick"/>
                 <Separator/>
                 <MenuItem Header="Очистить заказы" Click="ClearAllOrdersButtonClick" Foreground="#FFFF3B30"/>
             </MenuItem>
@@ -72,13 +81,13 @@
         <Label x:Name="title" Content="Меню" Grid.Column="2" Grid.Row="2" Background="#FFF6F6F7" FontWeight="SemiBold" FontSize="17" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         <Button x:Name="loginButton" Content="Авторизация" Click="LoginButtonClick" Grid.Column="0" Grid.Row="2" Background="#FFF6F6F7" BorderBrush="{x:Null}" Foreground="#FFFF3B30" FontWeight="SemiBold" FontSize="17"/>
 
-        <Button x:Name="showMenu" Content="Меню" Click="ShowMenu" Grid.Column="0" Grid.Row="4" Margin="2,2,2,0" Height="45" Background="White" BorderBrush="#FFC8C7CC" Foreground="#FF007AFF" FontSize="16" VerticalAlignment="Top"/>
-        <Button x:Name="showRestaurants" Content="Рестораны" Click="ShowRestaurants" Grid.Column="0" Grid.Row="4" Margin="2,49,2,0" Height="45" Background="White" BorderBrush="#FFC8C7CC" Foreground="#FF007AFF" FontSize="16" VerticalAlignment="Top"/>
-        <Button x:Name="showOrder" Content="Заказ" Click="ShowOrder" Visibility="Collapsed" Grid.Column="0" Grid.Row="4" Margin="2,96,2,0" Height="45" Background="White" BorderBrush="#FFC8C7CC" Foreground="#FF007AFF" FontSize="16" VerticalAlignment="Top"/>
-        <Button x:Name="showUsers" Content="Пользователи" Click="ShowUsers"  Visibility="Collapsed" Grid.Column="0" Grid.Row="4" Margin="2,143,2,0" Height="45" Background="White" BorderBrush="#FFC8C7CC" Foreground="#FF007AFF" FontSize="16" VerticalAlignment="Top"/>
-        <Button Content="Калькулятор" Click="OpenCalcButtonClick" Grid.Column="0" Grid.Row="4" Margin="2,0,2,2" Height="45" Background="White" BorderBrush="#FFC8C7CC" FontSize="16" VerticalAlignment="Bottom"/>
+        <Button x:Name="showMenu" Content="Меню" Click="ShowMenu" Grid.Column="0" Grid.Row="4" Margin="2,2,2,0" VerticalAlignment="Top"/>
+        <Button x:Name="showRestaurants" Content="Рестораны" Click="ShowRestaurants" Grid.Column="0" Grid.Row="4" Margin="2,49,2,0" VerticalAlignment="Top"/>
+        <Button x:Name="showOrder" Content="Заказ" Click="ShowOrder" Visibility="Collapsed" Grid.Column="0" Grid.Row="4" Margin="2,96,2,0" VerticalAlignment="Top"/>
+        <Button x:Name="showUsers" Content="Пользователи" Click="ShowUsers"  Visibility="Collapsed" Grid.Column="0" Grid.Row="4" Margin="2,143,2,0" VerticalAlignment="Top"/>
+        <Button Content="Калькулятор" Click="OpenCalcButtonClick" Grid.Column="0" Grid.Row="4" Margin="2,0,2,2" VerticalAlignment="Bottom"/>
 
-        <DataGrid x:Name="table" MouseLeftButtonUp="TableLeftClick" Grid.Column="2" Grid.Row="4" Margin="2" IsReadOnly="True" AutoGenerateColumns="False" CanUserSortColumns="True" Block.TextAlignment="Center" SelectionMode="Single" SelectionUnit="FullRow" CanUserResizeRows="False" CanUserReorderColumns="False" AlternationCount="1" AlternatingRowBackground="#BFF6F6F7" MinRowHeight="44" RowHeight="44" HorizontalGridLinesBrush="#FFC8C7CC" FontSize="14" VerticalContentAlignment="Center" VerticalGridLinesBrush="#FFB9B9B9" BorderBrush="#FFC8C7CC" Background="White" GridLinesVisibility="All" HeadersVisibility="Column" HorizontalScrollBarVisibility="Disabled">
+        <DataGrid x:Name="table" MouseLeftButtonUp="TableLeftClick" Grid.Column="2" Grid.Row="4" Margin="2" IsReadOnly="True" AutoGenerateColumns="False" Block.TextAlignment="Center" SelectionMode="Single" SelectionUnit="FullRow" CanUserResizeRows="False" CanUserReorderColumns="False" HeadersVisibility="Column" AlternationCount="1" AlternatingRowBackground="#BFF6F6F7" MinRowHeight="44" RowHeight="44" HorizontalGridLinesBrush="#FFC8C7CC" FontSize="14" VerticalGridLinesBrush="#FFB9B9B9" BorderBrush="#FFC8C7CC" Background="White"  HorizontalScrollBarVisibility="Disabled">
             <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem x:Name="addRowToOrder" Header="Заказать" Click="AddRowToOrderClick" Visibility="Collapsed"/>
@@ -87,8 +96,8 @@
             </DataGrid.ContextMenu>
         </DataGrid>
 
-        <Rectangle x:Name="horizLine1" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Fill="#FFA7A7AB"/>
-        <Rectangle x:Name="horizLine2" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3" Fill="#FFA7A7AB"/>
-        <Rectangle x:Name="vertLine" Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Fill="#FFA7A7AB"/>
+        <Rectangle x:Name="horizLine1" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"/>
+        <Rectangle x:Name="horizLine2" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3"/>
+        <Rectangle x:Name="vertLine" Grid.Column="1" Grid.Row="2" Grid.RowSpan="3"/>
     </Grid>
 </Window>

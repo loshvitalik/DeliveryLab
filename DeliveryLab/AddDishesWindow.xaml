@@ -5,25 +5,36 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         FocusManager.FocusedElement="{Binding ElementName=textBox}"
-        Title="Добавить блюда" Height="350" Width="350" WindowStartupLocation="CenterOwner" Background="#FFEFEFF4" WindowStyle="ThreeDBorderWindow" ShowInTaskbar="False">
+        Title="Добавить блюда" Height="350" Width="350" WindowStartupLocation="CenterOwner" Background="#FFEFEFF4" WindowStyle="ThreeDBorderWindow">
+
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Height" Value="45" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderBrush" Value="#FFC8C7CC" />
+            <Setter Property="Foreground" Value="#FF007AFF" />
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="25*"/>
-            <RowDefinition Height="75*"/>
-            <RowDefinition Height="49"/>
-            <RowDefinition Height="49"/>
+            <RowDefinition Height="25*" />
+            <RowDefinition Height="75*" />
+            <RowDefinition Height="48" />
+            <RowDefinition Height="48" />
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="50*"/>
-            <ColumnDefinition Width="50*"/>
+            <ColumnDefinition Width="50*" />
+            <ColumnDefinition Width="50*" />
         </Grid.ColumnDefinitions>
 
-        <Label Content="Введите названия блюд, каждое с новой&#10;строки. Формат: название:цена" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center" FontSize="16"/>
-        <RichTextBox x:Name="textBox" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Margin="2,0,2,0" Background="White" BorderBrush="#FFC8C7CC" FontSize="14"/>
+        <Label Content="Введите названия блюд, каждое с новой&#10;строки. Формат: название:цена" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center" FontSize="16" />
+        <RichTextBox x:Name="textBox" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Margin="2,0,2,0" Background="White" BorderBrush="#FFC8C7CC" FontSize="14" />
 
-        <Button x:Name="replaceButton" Content="Заменить старые" Click="ReplaceButtonClick" Grid.Column="0" Grid.Row="2" Margin="2,2,1,2" Background="White" BorderBrush="#FFC8C7CC" Foreground="#FF007AFF" FontSize="16"/>
-        <Button x:Name="addButton" Content="Добавить новые" Click="AddButtonClick" Grid.Column="1" Grid.Row="2" Margin="1,2,2,2" Background="White" BorderBrush="#FFC8C7CC" Foreground="#FF007AFF" FontSize="16"/>
-        <Button x:Name="cancelButton" Content="Отмена" Click="CloseWindow" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Margin="2" Background="White" BorderBrush="#FFC8C7CC" Foreground="#FFFF3B30" FontSize="16"/>
+        <Button Content="Заменить старые" Click="ReplaceButtonClick" Grid.Column="0" Grid.Row="2" Margin="2,2,1,1" />
+        <Button Content="Добавить новые" Click="AddButtonClick" Grid.Column="1" Grid.Row="2" Margin="1,2,2,1" />
+        <Button Content="Отмена" Click="CloseWindow" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Margin="2,1,2,2" Foreground="#FFFF3B30" />
     </Grid>
 </Window>

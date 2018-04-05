@@ -17,9 +17,12 @@ namespace DeliveryLab
 		private void RegisterUser(object sender, RoutedEventArgs e)
 		{
 			if (loginBox.Text.Contains(",") || loginBox.Text.Contains(":") || loginBox.Text.Contains("\"") ||
-				loginBox.Text.Contains("{") || loginBox.Text.Contains("}") || loginBox.Text.Contains("[") || loginBox.Text.Contains("]"))
+			    loginBox.Text.Contains("{") || loginBox.Text.Contains("}") || loginBox.Text.Contains("[") ||
+			    loginBox.Text.Contains("]"))
+			{
 				new Alert("Неверный логин",
-					"Логин не может содержать символы\n\",\", \":\", \", \"{\", \"}\", \"[\", \"]\"").Show();
+					"Логин не может содержать символы\n\",\", \":\", \"{\", \"}\", \"[\", \"]\" и \"").Show();
+			}
 			else
 			{
 				var group = Type.User;
@@ -30,8 +33,8 @@ namespace DeliveryLab
 
 		private void CheckIfRegistered()
 		{
-			bool userFound = false;
-			foreach (User u in Users)
+			var userFound = false;
+			foreach (var u in Users)
 				if (loginBox.Text == u.Login)
 					userFound = true;
 			if (userFound)

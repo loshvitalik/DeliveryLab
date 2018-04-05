@@ -3,35 +3,45 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DeliveryLab"
         mc:Ignorable="d"
         FocusManager.FocusedElement="{Binding ElementName=loginBox}"
-        Title="Авторизация — Delivery Lab" Height="270" Width="350" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Background="#FFEFEFF4" WindowStyle="ThreeDBorderWindow" Topmost="True" ShowInTaskbar="False">
+        Title="Авторизация" Height="270" Width="350" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Background="#FFEFEFF4" WindowStyle="ThreeDBorderWindow" Topmost="True">
+
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Height" Value="45" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderBrush" Value="#FFC8C7CC" />
+            <Setter Property="Foreground" Value="#FF007AFF" />
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="25*"/>
-            <RowDefinition Height="25*"/>
-            <RowDefinition Height="25*"/>
-            <RowDefinition Height="25*"/>
-            <RowDefinition Height="49"/>
-            <RowDefinition Height="49"/>
+            <RowDefinition Height="25*" />
+            <RowDefinition Height="25*" />
+            <RowDefinition Height="25*" />
+            <RowDefinition Height="25*" />
+            <RowDefinition Height="49" />
+            <RowDefinition Height="49" />
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="50*"/>
-            <ColumnDefinition Width="50*"/>
+            <ColumnDefinition Width="50*" />
+            <ColumnDefinition Width="50*" />
         </Grid.ColumnDefinitions>
 
-        <Label Content="Логин" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center" FontSize="16"/>
-        <TextBox x:Name="loginBox" KeyUp="LoginKeyPress" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Margin="4,0,4,0" Background="White" BorderBrush="#FFC8C7CC" FontSize="16" VerticalContentAlignment="Center" LostFocus="LoginBoxLostFocus"/>
+        <Label Content="Логин" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center" FontSize="16" />
+        <TextBox x:Name="loginBox" KeyUp="LoginKeyPress" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Margin="4,0,4,0" Background="White" BorderBrush="#FFC8C7CC" FontSize="16" VerticalContentAlignment="Center" LostFocus="LoginBoxLostFocus" />
 
-        <Label Content="Пароль" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center" FontSize="16"/>
-        <PasswordBox x:Name="passBox" KeyUp="PassEnterKeyPress" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Margin="4,0,4,0" Background="White" BorderBrush="#FFC8C7CC" FontSize="16" VerticalContentAlignment="Center"/>
+        <Label Content="Пароль" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center" FontSize="16" />
+        <PasswordBox x:Name="passBox" KeyUp="PassEnterKeyPress" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Margin="4,0,4,0" Background="White" BorderBrush="#FFC8C7CC" FontSize="16" VerticalContentAlignment="Center" />
 
-        <CheckBox x:Name="restCheckBox" Content="Ресторан" Visibility="Collapsed" Grid.Column="0" Grid.Row="4" Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="16" Foreground="DimGray"/>
+        <CheckBox x:Name="restCheckBox" Content="Ресторан" Visibility="Collapsed" Grid.Column="0" Grid.Row="4" Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="16" Foreground="DimGray" />
 
-        <Button x:Name="regButton" Content="Зарегистрироваться" Click="RegisterUser" Visibility="Collapsed" Grid.Column="1" Grid.Row="4" Margin="1,2,2,2" Background="White" BorderBrush="#FFC8C7CC" Foreground="#FF007AFF" FontSize="16"/>
-        <Button x:Name="cancelButton" Content="Отмена" Click="CloseWindow" Grid.Column="0" Grid.Row="5" Margin="2,2,1,2" Background="White" BorderBrush="#FFC8C7CC" Foreground="#FFFF3B30" FontSize="16"/>
-        <Button x:Name="loginButton" Content="Войти" Click="LoginUserButtonClick" Grid.Column="1" Grid.Row="5" Margin="1,2,2,2" Background="White" BorderBrush="#FFC8C7CC" Foreground="#FF007AFF" FontSize="16" FontWeight="SemiBold"/>
+        <Button x:Name="regButton" Content="Зарегистрироваться" Click="RegisterUser" Visibility="Collapsed" Grid.Column="1" Grid.Row="4" Margin="1,2,2,2" />
+        <Button x:Name="cancelButton" Content="Отмена" Click="CloseWindow" Grid.Column="0" Grid.Row="5" Margin="2,2,1,2" Foreground="#FFFF3B30" />
+        <Button x:Name="loginButton" Content="Войти" Click="LoginUserButtonClick" Grid.Column="1" Grid.Row="5" Margin="1,2,2,2" />
     </Grid>
 </Window>

@@ -1,12 +1,16 @@
-﻿using System;
-using System.Windows.Navigation;
-
-namespace DeliveryLab
+﻿namespace DeliveryLab
 {
-	public class Dish : IComparable
+	public class Dish
 	{
-		private double price;
+		public Dish(int restId, string restName, string name, double price)
+		{
+			RestId = restId;
+			RestName = restName;
+			Name = name;
+			Price = price;
+		}
 
+		private double price;
 		public double Price
 		{
 			get => price;
@@ -17,23 +21,8 @@ namespace DeliveryLab
 			}
 		}
 
-		public int RestID { get; }
+		public int RestId { get; }
 		public string RestName { get; }
 		public string Name { get; }
-
-		public Dish(int restID, string restName, string name, double price)
-		{
-			RestID = restID;
-			RestName = restName;
-			Name = name;
-			Price = price;
-		}
-
-		public int CompareTo(object obj)
-		{
-			Dish dish = obj as Dish;
-			if (RestID == dish?.RestID && Name == dish.Name && Price == dish.Price) return 0;
-			return -1;
-		}
 	}
 }

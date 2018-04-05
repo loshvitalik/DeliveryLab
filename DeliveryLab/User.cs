@@ -13,14 +13,9 @@ namespace DeliveryLab
 
 	public class User
 	{
-		public int ID { get; }
-		public Type Group { get; }
-		public string Login { get; }
-		public string Password { get; set; }
-
 		public User(Type group, string login, string password)
 		{
-			ID = Users.Any() ? Users.Last().ID + 1 : 0;
+			Id = Users.Any() ? Users.Last().Id + 1 : 0;
 			Group = group;
 			Login = login;
 			Password = password;
@@ -29,10 +24,15 @@ namespace DeliveryLab
 		[JsonConstructor]
 		public User(int id, Type group, string login, string password)
 		{
-			ID = id;
+			Id = id;
 			Group = group;
 			Login = login;
 			Password = password;
 		}
+
+		public int Id { get; }
+		public Type Group { get; }
+		public string Login { get; }
+		public string Password { get; set; }
 	}
 }

@@ -1,16 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Newtonsoft.Json;
 using static DeliveryLab.MainWindow;
-using System.Globalization;
 
 namespace DeliveryLab
 {
 	public class Restaurant
-	{
-		private int rating;
+	{ 
+		public Restaurant(string name, User owner)
+		{
+			Id = Restaurants.Any() ? Restaurants.Last().Id + 1 : 0;
+			Name = name;
+			OwnerId = owner.Id;
+			Rating = 0;
+		}
 
+		[JsonConstructor]
+		private Restaurant(int id, int ownerId, string name, int rating, bool isVerified)
+		{
+			Id = id;
+			OwnerId = ownerId;
+			Name = name;
+			Rating = rating;
+			IsVerified = isVerified;
+		}
+
+		private int rating;
 		public int Rating
 		{
 			get => rating;
@@ -22,45 +39,27 @@ namespace DeliveryLab
 			}
 		}
 
-		public int ID { get; }
+		public int Id { get; }
 		public string Name { get; }
-		public int OwnerID { get; }
+		public int OwnerId { get; }
 		public bool IsVerified { get; set; }
-
-		public Restaurant(string name, User owner)
-		{
-			ID = Restaurants.Any() ? Restaurants.Last().ID + 1 : 0;
-			Name = name;
-			OwnerID = owner.ID;
-			Rating = 0;
-		}
-
-		[JsonConstructor]
-		private Restaurant(int id, int ownerID, string name, int rating, bool isVerified)
-		{
-			ID = id;
-			OwnerID = ownerID;
-			Name = name;
-			Rating = rating;
-			IsVerified = isVerified;
-		}
 
 		public void ReplaceDishes(List<string> dishes)
 		{
-			foreach (Dish d in Dishes.ToList())
-				if (d.RestID == ID)
+			foreach (var d in Dishes.ToList())
+				if (d.RestId == Id)
 					Dishes.Remove(d);
 			AddDishes(dishes);
 		}
 
 		public void AddDishes(List<string> dishes)
 		{
-			foreach (string d in dishes)
+			foreach (var d in dishes)
 			{
-				string[] dish = d.Split(':');
+				var dish = d.Split(':');
 				try
 				{
-					Dishes.Add(new Dish(ID, Name, dish[0], double.Parse(dish[1], CultureInfo.InvariantCulture)));
+					Dishes.Add(new Dish(Id, Name, dish[0], double.Parse(dish[1], CultureInfo.InvariantCulture)));
 				}
 				catch (Exception)
 				{

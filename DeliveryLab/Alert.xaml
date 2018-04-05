@@ -3,17 +3,28 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DeliveryLab"
         mc:Ignorable="d"
         FocusManager.FocusedElement="{Binding ElementName=closeButton}"
-        Height="170" Width="350" WindowStartupLocation="CenterOwner" Background="#FFEFEFF4" ResizeMode="NoResize" Topmost="True" WindowStyle="ThreeDBorderWindow" ShowInTaskbar="False">
+        Height="170" Width="350" WindowStartupLocation="CenterOwner" Background="#FFEFEFF4" ResizeMode="NoResize"
+        Topmost="True" WindowStyle="ThreeDBorderWindow">
+
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Height" Value="45" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderBrush" Value="#FFC8C7CC" />
+            <Setter Property="Foreground" Value="#FF007AFF" />
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="100*"/>
-            <RowDefinition Height="45"/>
+            <RowDefinition Height="100*" />
+            <RowDefinition Height="45" />
         </Grid.RowDefinitions>
 
-        <Label x:Name="label" Grid.Row="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
-        <Button x:Name="closeButton" Content="Закрыть" Click="CloseWindow" Grid.Row="1" Margin="2,0,2,2" Background="White" BorderBrush="#FFC8C7CC" Foreground="#FF007AFF" FontSize="16"/>
+        <Label x:Name="label" Grid.Row="0" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" />
+        <Button x:Name="closeButton" Content="Закрыть" Click="CloseWindow" Grid.Row="1" Margin="2" />
     </Grid>
 </Window>
