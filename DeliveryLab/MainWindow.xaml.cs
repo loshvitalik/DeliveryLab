@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
@@ -35,6 +33,7 @@ namespace DeliveryLab
 			ShowMenu("", new RoutedEventArgs());
 		}
 
+		// Авторизация
 		private void LoginButtonClick(object sender, RoutedEventArgs e)
 		{
 			if (CurrentUser == null)
@@ -43,7 +42,80 @@ namespace DeliveryLab
 				SessionManager.LogOut();
 		}
 
-		// Левая колонка
+		// Верхнее меню
+		// -Администрирование
+		private void VerifyAllButtonClick(object sender, RoutedEventArgs e)
+		{
+			foreach (Restaurant r in Restaurants)
+				r.IsVerified = true;
+			table.Items.Refresh();
+		}
+
+		private void LoadUsersButtonClick(object sender, RoutedEventArgs e)
+		{
+			SaveSystem.SetUsersFileName();
+		}
+
+		private void LoadRestsButtonClick(object sender, RoutedEventArgs e)
+		{
+			SaveSystem.SetRestsFileName();
+		}
+
+		private void SaveAllButtonClick(object sender, RoutedEventArgs e)
+		{
+			SaveSystem.SaveAll();
+		}
+
+		private void ClearAllOrdersButtonClick(object sender, RoutedEventArgs e)
+		{
+			SaveSystem.ClearOrders();
+			table.Items.Refresh();
+		}
+
+		// -Ресторан
+		private void CompleteAllOrdersButtonClick(object sender, RoutedEventArgs e)
+		{
+			foreach (var item in Orders.Items.Where(i => i.Item.RestID == CurrentRestaurant.ID))
+				item.IsReady = true;
+			table.Items.Refresh();
+		}
+
+		private void AddDishesButtonClick(object sender, RoutedEventArgs e)
+		{
+			new AddDishesWindow().Show();
+		}
+
+		// -Настройки
+		private void ClearOrderButtonClick(object sender, RoutedEventArgs e)
+		{
+			foreach (var item in Orders.Items.Where(i => i.UserID == CurrentUser.ID).ToArray())
+				Orders.Items.Remove(item);
+			table.Items.Refresh();
+		}
+
+		private void ChangePasswordButtonClick(object sender, RoutedEventArgs e)
+		{
+			new ChangePasswordWindow().Show();
+		}
+
+		private void DeleteRestaurantButtonClick(object sender, RoutedEventArgs e)
+		{
+			SessionManager.DeleteRestaurant(CurrentRestaurant);
+		}
+
+		private void DeleteAccountButtonClick(object sender, RoutedEventArgs e)
+		{
+			SessionManager.DeleteAccount(CurrentUser);
+		}
+
+		// -О программе
+		private void AboutButtonClick(object sender, RoutedEventArgs e)
+		{
+			new Alert("О программе \"Delivery Lab\"",
+				"Delivery Lab v. 0.3 alpha\n© 2018 loshvitalik, MrBlacktop").Show();
+		}
+
+		// Левое меню
 		public void ShowMenu(object sender, RoutedEventArgs e)
 		{
 			title.Content = "Меню";
@@ -78,25 +150,24 @@ namespace DeliveryLab
 			addRowToOrder.Visibility = Visibility.Collapsed;
 			deleteRowButton.Visibility = CurrentUser?.Group != Type.User ? Visibility.Visible : Visibility.Collapsed;
 			table.Columns.Clear();
-			table.Columns.Add(new DataGridCheckBoxColumn()
-			{
-				Header = "Проверен",
-				Binding = new Binding("IsVerified"),
-				Width = new DataGridLength(15, DataGridLengthUnitType.Star),
-			});
 			table.Columns.Add(new DataGridTextColumn()
 			{
 				Header = "Название",
 				Binding = new Binding("Name"),
 				Width = new DataGridLength(50, DataGridLengthUnitType.Star),
 			});
-			table.Columns.Add(
-				new DataGridTextColumn()
-				{
-					Header = "Рейтинг",
-					Binding = new Binding("Rating"),
-					Width = new DataGridLength(35, DataGridLengthUnitType.Star),
-				});
+			table.Columns.Add(new DataGridTextColumn()
+			{
+				Header = "Рейтинг",
+				Binding = new Binding("Rating"),
+				Width = new DataGridLength(25, DataGridLengthUnitType.Star),
+			});
+			table.Columns.Add(new DataGridCheckBoxColumn()
+			{
+				Header = "Проверен",
+				Binding = new Binding("IsVerified"),
+				Width = new DataGridLength(25, DataGridLengthUnitType.Star),
+			});
 		}
 
 		private void ShowOrder(object sender, RoutedEventArgs e)
@@ -104,21 +175,21 @@ namespace DeliveryLab
 			table.ItemsSource = Orders.Items.Where(i =>
 				(CurrentUser.Group == Type.User)
 					? i.UserID == CurrentUser.ID
-					: (CurrentUser.Group != Type.Restaurant) || i.Item.RestID == CurrentRestaurant.ID);
+					: (CurrentUser.Group == Type.Administrator) || i.Item.RestID == CurrentRestaurant.ID);
 			title.Content = CurrentUser.Group == Type.User ? "Заказ" : "Заказы";
 			addRowToOrder.Visibility = Visibility.Collapsed;
 			deleteRowButton.Visibility = Visibility.Visible;
 			table.Columns.Clear();
-			table.Columns.Add(new DataGridCheckBoxColumn()
-			{
-				Header = "Готовность",
-				Binding = new Binding("IsReady"),
-
-				Width = new DataGridLength(15, DataGridLengthUnitType.Star),
-			});
+			if (CurrentUser.Group != Type.User)
+				table.Columns.Add(new DataGridTextColumn()
+				{
+					Header = "Пользователь",
+					Binding = new Binding("UserName"),
+					Width = new DataGridLength(25, DataGridLengthUnitType.Star),
+				});
 			table.Columns.Add(new DataGridTextColumn()
 			{
-				Header = "Название",
+				Header = "Заказ",
 				Binding = new Binding("Item.Name"),
 				Width = new DataGridLength(50, DataGridLengthUnitType.Star),
 			});
@@ -126,13 +197,19 @@ namespace DeliveryLab
 			{
 				Header = "Кол-во",
 				Binding = new Binding("Count"),
-				Width = new DataGridLength(10, DataGridLengthUnitType.Star),
+				Width = new DataGridLength(20, DataGridLengthUnitType.Star),
 			});
 			table.Columns.Add(new DataGridTextColumn()
 			{
 				Header = "Стоимость",
 				Binding = new Binding("Sum"),
-				Width = new DataGridLength(25, DataGridLengthUnitType.Star),
+				Width = new DataGridLength(20, DataGridLengthUnitType.Star),
+			});
+			table.Columns.Add(new DataGridCheckBoxColumn()
+			{
+				Header = "Готов",
+				Binding = new Binding("IsReady"),
+				Width = new DataGridLength(10, DataGridLengthUnitType.Star),
 			});
 		}
 
@@ -145,29 +222,22 @@ namespace DeliveryLab
 			table.Columns.Clear();
 			table.Columns.Add(new DataGridTextColumn()
 			{
-				Header = "ID",
-				Binding = new Binding("ID"),
-				Width = new DataGridLength(15, DataGridLengthUnitType.Star),
-			});
-			table.Columns.Add(new DataGridTextColumn()
-			{
 				Header = "Логин",
 				Binding = new Binding("Login"),
 				Width = new DataGridLength(50, DataGridLengthUnitType.Star),
 			});
 			table.Columns.Add(new DataGridTextColumn()
 			{
+				Header = "ID",
+				Binding = new Binding("ID"),
+				Width = new DataGridLength(25, DataGridLengthUnitType.Star),
+			});
+			table.Columns.Add(new DataGridTextColumn()
+			{
 				Header = "Группа",
 				Binding = new Binding("Group"),
-				Width = new DataGridLength(35, DataGridLengthUnitType.Star),
+				Width = new DataGridLength(25, DataGridLengthUnitType.Star),
 			});
-		}
-
-		private void AddNewDish(object sender, RoutedEventArgs e)
-		{
-			if (CurrentUser?.Group == Type.Restaurant)
-				CurrentRestaurant.AddDishes(new List<string>()
-					{"Рандомная еда|" + new Random().Next(0, 10000)});
 		}
 
 		private void OpenCalcButtonClick(object sender, RoutedEventArgs e)
@@ -175,72 +245,26 @@ namespace DeliveryLab
 			Process.Start("calc.exe");
 		}
 
-		// Меню
-		private void VerifyAll(object sender, RoutedEventArgs e)
-		{
-			foreach (Restaurant r in Restaurants)
-				r.IsVerified = true;
-		}
-
-		private void LoadUsersButtonClick(object sender, RoutedEventArgs e)
-		{
-			SaveSystem.SetUsersFileName();
-		}
-
-		private void LoadRestsButtonClick(object sender, RoutedEventArgs e)
-		{
-			SaveSystem.SetRestsFileName();
-		}
-
-		private void SaveAllButtonClick(object sender, RoutedEventArgs e)
-		{
-			SaveSystem.SaveAll();
-		}
-
-		private void ClearOrdersButtonClick(object sender, RoutedEventArgs e)
-		{
-			SaveSystem.ClearOrders();
-		}
-
-		private void ShowChangePasswordWindow(object sender, RoutedEventArgs e)
-		{
-			new ChangePasswordWindow().Show();
-		}
-
-		private void DeleteRestaurantButtonClick(object sender, RoutedEventArgs e)
-		{
-			SessionManager.DeleteRestaurant(CurrentRestaurant);
-		}
-
-		private void DeleteAccountButtonClick(object sender, RoutedEventArgs e)
-		{
-			SessionManager.DeleteAccount(CurrentUser);
-		}
-
-		private void ShowHelpWindow(object sender, RoutedEventArgs e)
-		{
-			new Alert("Помощь — Delivery Lab",
-					"1. Зарегистрируйтесь или авторизуйтесь\n2. Выберите блюда в меню справа\n3. Сделайте заказ и ждите доставки!")
-				.Show();
-		}
-
-		private void ShowAboutWindow(object sender, RoutedEventArgs e)
-		{
-			new Alert("О программе \"Delivery Lab\"",
-				"Delivery Lab v. 0.3 alpha\n© 2018 loshvitalik, MrBlacktop").Show();
-		}
-
+		// Действия в таблице
 		private void TableLeftClick(object sender, MouseButtonEventArgs e)
 		{
-			if (title.Content.ToString() == "Заказы" && CurrentUser.Group != Type.User)
+			if (CurrentUser?.Group == Type.Restaurant || CurrentUser?.Group == Type.Administrator)
 			{
 				var selectedItem = table.SelectedItem;
-				if (selectedItem is OrderItem item)
+				if (selectedItem is OrderItem oitem)
 				{
-					var orderItem = Orders.Items.First(i => i == item);
+					var orderItem = Orders.Items.First(i => i == oitem);
 					orderItem.IsReady = !orderItem.IsReady;
 					table.Items.Refresh();
 					SaveSystem.SaveOrdersToFile();
+				}
+
+				if (selectedItem is Restaurant ritem && CurrentUser.Group == Type.Administrator)
+				{
+					var restaurant = Restaurants.First(r => r.ID == ritem.ID);
+					restaurant.IsVerified = !restaurant.IsVerified;
+					table.Items.Refresh();
+					SaveSystem.SaveRestsToFile();
 				}
 			}
 		}
@@ -272,6 +296,10 @@ namespace DeliveryLab
 			if (selectedItem is OrderItem orderItem && CurrentUser.Group != Type.Restaurant)
 			{
 				Orders.Remove(orderItem.Item);
+				table.ItemsSource = Orders.Items.Where(i =>
+					(CurrentUser.Group == Type.User)
+						? i.UserID == CurrentUser.ID
+						: (CurrentUser.Group == Type.Administrator) || i.Item.RestID == CurrentRestaurant.ID);
 				SaveSystem.SaveOrdersToFile();
 			}
 
@@ -282,11 +310,6 @@ namespace DeliveryLab
 			}
 
 			table.Items.Refresh();
-		}
-
-		private void CloseAppButtonClick(object sender, RoutedEventArgs e)
-		{
-			Application.Current.Shutdown();
 		}
 	}
 }

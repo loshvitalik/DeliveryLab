@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
@@ -34,8 +35,6 @@ namespace DeliveryLab
 						if (CurrentUser.Group == Type.Restaurant)
 							SetRestaurantRights();
 					}
-
-					Window.ShowMenu("", new RoutedEventArgs());
 					break;
 				}
 
@@ -56,13 +55,11 @@ namespace DeliveryLab
 			Window.Title = "Delivery Lab";
 			Window.loginButton.Content = "Авторизация";
 			Window.loginButton.Foreground = new SolidColorBrush(Color.FromRgb(255, 59, 48));
-			Window.changePassButton.IsEnabled = false;
-			Window.deleteRestaurantButton.Visibility = Visibility.Collapsed;
-			Window.deleteAccountButton.IsEnabled = false;
+			Window.settingsMenu.Visibility = Visibility.Collapsed;
 			Window.adminMenu.Visibility = Visibility.Collapsed;
+			Window.restaurantMenu.Visibility = Visibility.Collapsed;
 			Window.showOrder.Visibility = Visibility.Collapsed;
 			Window.showUsers.Visibility = Visibility.Collapsed;
-			Window.addDishButton.Visibility = Visibility.Collapsed;
 			Window.addRowToOrder.Visibility = Visibility.Collapsed;
 			Window.deleteRowButton.Visibility = Visibility.Collapsed;
 		}
@@ -80,19 +77,19 @@ namespace DeliveryLab
 
 		public static void DeleteAccount(User userToDelete)
 		{
+			if (userToDelete.Group == Type.Restaurant)
+			{
+				foreach (var d in Dishes.Where(d => d.RestID == CurrentRestaurant.ID).ToArray())
+					Dishes.Remove(d);
+				foreach (var r in Restaurants.Where(r => r.OwnerID == userToDelete.ID).ToArray())
+					Restaurants.Remove(r);
+			}
+
 			if (userToDelete.ID == CurrentUser.ID)
 				LogOut();
 			Users.Remove(Users.First(u => u.ID == userToDelete.ID));
-			if (userToDelete.Group == Type.Restaurant)
-			{
-				foreach (Dish d in Dishes.ToList())
-					if (d.RestID == CurrentRestaurant.ID)
-						Dishes.Remove(d);
-				foreach (Restaurant r in Restaurants.ToList())
-					if (r.OwnerID == userToDelete.ID)
-						Restaurants.Remove(r);
-			}
-
+			foreach (var i in Orders.Items.Where(i => i.UserID == userToDelete.ID))
+				Orders.Items.Remove(i);
 			SaveSystem.SaveAll();
 		}
 
@@ -120,11 +117,11 @@ namespace DeliveryLab
 
 		private static void SetCommonRights()
 		{
+			Window.ShowMenu("", new RoutedEventArgs());
 			Window.loginButton.Content = CurrentUser.Login + " [Выйти]";
 			Window.loginButton.Foreground = new SolidColorBrush(Color.FromRgb(0, 122, 255));
-			Window.changePassButton.IsEnabled = true;
-			Window.deleteAccountButton.IsEnabled = true;
 			Window.showOrder.Content = "Заказ";
+			Window.settingsMenu.Visibility = Visibility.Visible;
 			Window.showOrder.Visibility = Visibility.Visible;
 			Window.addRowToOrder.Visibility = Visibility.Visible;
 		}
@@ -132,10 +129,10 @@ namespace DeliveryLab
 		private static void SetAdminRights()
 		{
 			Window.Title = "Delivery Lab — Администратор";
+			Window.showOrder.Content = "Заказы";
 			Window.adminMenu.Visibility = Visibility.Visible;
 			Window.showUsers.Visibility = Visibility.Visible;
 			Window.deleteRowButton.Visibility = Visibility.Visible;
-			Window.showOrder.Content = "Заказы";
 		}
 
 		private static void SetRestaurantRights()
@@ -150,9 +147,8 @@ namespace DeliveryLab
 					Window.Title += " (Не подтверждён)";
 			}
 
-			Window.deleteRestaurantButton.Visibility = Visibility.Visible;
-			Window.addDishButton.Visibility = Visibility.Visible;
 			Window.showOrder.Content = "Заказы";
+			Window.restaurantMenu.Visibility = Visibility.Visible;
 		}
 
 		public static string EncryptString(string password)

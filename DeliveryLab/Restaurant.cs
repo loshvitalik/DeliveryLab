@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using static DeliveryLab.MainWindow;
@@ -44,27 +45,27 @@ namespace DeliveryLab
 			IsVerified = isVerified;
 		}
 
-		public void UpdateDishes(List<string> dishes)
+		public void ReplaceDishes(List<string> dishes)
 		{
 			foreach (Dish d in Dishes.ToList())
 				if (d.RestID == ID)
 					Dishes.Remove(d);
-			foreach (string d in dishes)
-			{
-				string[] dish = d.Split('|');
-				Dishes.Add(new Dish(ID, Name, dish[0], double.Parse(dish[1], CultureInfo.InvariantCulture)));
-			}
-
-			SaveSystem.SaveDishesToFile();
+			AddDishes(dishes);
 		}
 
 		public void AddDishes(List<string> dishes)
 		{
 			foreach (string d in dishes)
 			{
-				string[] dish = d.Split('|');
-				if (dish.Length == 2)
+				string[] dish = d.Split(':');
+				try
+				{
 					Dishes.Add(new Dish(ID, Name, dish[0], double.Parse(dish[1], CultureInfo.InvariantCulture)));
+				}
+				catch (Exception)
+				{
+					new Alert("Неверный формат", "Блюда были введены в\nневерном формате.\nФормат: название:цена").Show();
+				}
 			}
 
 			SaveSystem.SaveDishesToFile();

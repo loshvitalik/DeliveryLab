@@ -83,6 +83,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AddDishesWindow.xaml.cs">
+      <DependentUpon>AddDishesWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="AddRestaurantWindow.xaml.cs">
       <DependentUpon>AddRestaurantWindow.xaml</DependentUpon>
     </Compile>
@@ -101,6 +104,10 @@
     <Compile Include="SaveSystem.cs" />
     <Compile Include="SessionManager.cs" />
     <Compile Include="User.cs" />
+    <Page Include="AddDishesWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="AddRestaurantWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

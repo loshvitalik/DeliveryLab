@@ -28,7 +28,8 @@ namespace DeliveryLab
 
 		public void Remove(Dish item)
 		{
-			var orderItem = Items.FirstOrDefault(i => i.Item == item && i.UserID == CurrentUser.ID);
+			var orderItem = Items.FirstOrDefault(i =>
+				i.Item == item && (i.UserID == CurrentUser.ID || CurrentUser.Group == Type.Administrator));
 			if (orderItem != null)
 				if (orderItem.Count == 1)
 					Items.Remove(orderItem);

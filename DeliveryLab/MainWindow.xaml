@@ -3,12 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DeliveryLab"
         mc:Ignorable="d"
         Title="Delivery Lab" Height="600" MinHeight="480" Width="900" MinWidth="640" ResizeMode="CanResize" Background="#FFEFEFF4" WindowStyle="ThreeDBorderWindow">
     <Window.Resources>
         <!-- Пример картинки на всякий -->
-        <Image x:Key="receiverOn" Source="Images/on.png" Height="31" Width="51"/>
         <Style TargetType="DataGridColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="TextBlock.FontWeight" Value="SemiBold"/>
@@ -45,26 +43,29 @@
         </Grid.ColumnDefinitions>
 
         <Menu Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Padding="2" Width="auto" VerticalAlignment="Center" Background="#FFEFEFF4" FontSize="14">
-            <MenuItem x:Name="adminMenu" Header="Админка" Visibility="Collapsed">
-                <MenuItem Header="Верифицировать все рестораны" Click="VerifyAll"/>
+            <MenuItem x:Name="adminMenu" Header="Администрирование" Visibility="Collapsed">
+                <MenuItem Header="Верифицировать все рестораны" Click="VerifyAllButtonClick"/>
                 <Separator/>
                 <MenuItem Header="Загрузить пользователей из файла" Click="LoadUsersButtonClick"/>
                 <MenuItem Header="Загрузить рестораны из файла" Click="LoadRestsButtonClick"/>
                 <MenuItem Header="Сохранить всё" Click="SaveAllButtonClick"/>
                 <Separator/>
-                <MenuItem Header="Очистить заказы" Click="ClearOrdersButtonClick" Foreground="#FFFF3B30"/>
+                <MenuItem Header="Очистить заказы" Click="ClearAllOrdersButtonClick" Foreground="#FFFF3B30"/>
             </MenuItem>
-            <MenuItem Header="Настройки">
-                <MenuItem x:Name="changePassButton" Header="Изменить пароль" Click="ShowChangePasswordWindow" IsEnabled="False"/>
-                <MenuItem x:Name="deleteRestaurantButton" Header="Удалить ресторан" Click="DeleteRestaurantButtonClick" Visibility="Collapsed" Foreground="#FFFF3B30"/>
-                <MenuItem x:Name="deleteAccountButton" Header="Удалить аккаунт" Click="DeleteAccountButtonClick" IsEnabled="False" Foreground="#FFFF3B30"/>
+            <MenuItem x:Name="restaurantMenu" Header="Ресторан" Visibility="Collapsed">
+                <MenuItem Header="Выполнить все заказы" Click="CompleteAllOrdersButtonClick"/>
+                <MenuItem Header="Добавить/заменить блюда" Click="AddDishesButtonClick"/>
+                <Separator/>
+                <MenuItem Header="Удалить ресторан" Click="DeleteRestaurantButtonClick" Foreground="#FFFF3B30"/>
+            </MenuItem>
+            <MenuItem x:Name="settingsMenu" Header="Настройки" Visibility="Collapsed">
+                <MenuItem Header="Очистить заказ" Click="ClearOrderButtonClick"/>
+                <MenuItem Header="Сменить пароль" Click="ChangePasswordButtonClick"/>
+                <Separator/>
+                <MenuItem Header="Удалить аккаунт" Click="DeleteAccountButtonClick" Foreground="#FFFF3B30"/>
             </MenuItem>
             <MenuItem Header="Справка">
-                <MenuItem Header="Помощь" Click="ShowHelpWindow"/>
-                <MenuItem Header="О программе" Click="ShowAboutWindow"/>
-            </MenuItem>
-            <MenuItem Header="Выход">
-                <MenuItem Header="Выход" Click="CloseAppButtonClick"/>
+                <MenuItem Header="О программе" Click="AboutButtonClick" />
             </MenuItem>
         </Menu>
 
@@ -75,7 +76,6 @@
         <Button x:Name="showRestaurants" Content="Рестораны" Click="ShowRestaurants" Grid.Column="0" Grid.Row="4" Margin="2,49,2,0" Height="45" Background="White" BorderBrush="#FFC8C7CC" Foreground="#FF007AFF" FontSize="16" VerticalAlignment="Top"/>
         <Button x:Name="showOrder" Content="Заказ" Click="ShowOrder" Visibility="Collapsed" Grid.Column="0" Grid.Row="4" Margin="2,96,2,0" Height="45" Background="White" BorderBrush="#FFC8C7CC" Foreground="#FF007AFF" FontSize="16" VerticalAlignment="Top"/>
         <Button x:Name="showUsers" Content="Пользователи" Click="ShowUsers"  Visibility="Collapsed" Grid.Column="0" Grid.Row="4" Margin="2,143,2,0" Height="45" Background="White" BorderBrush="#FFC8C7CC" Foreground="#FF007AFF" FontSize="16" VerticalAlignment="Top"/>
-        <Button x:Name="addDishButton" Content="Добавить блюдо" Click="AddNewDish" Visibility="Collapsed" Grid.Column="0" Grid.Row="4" Margin="2,190,2,0" Height="45" Background="White" BorderBrush="#FFC8C7CC" Foreground="Gray" FontSize="16" VerticalAlignment="Top"/>
         <Button Content="Калькулятор" Click="OpenCalcButtonClick" Grid.Column="0" Grid.Row="4" Margin="2,0,2,2" Height="45" Background="White" BorderBrush="#FFC8C7CC" FontSize="16" VerticalAlignment="Bottom"/>
 
         <DataGrid x:Name="table" MouseLeftButtonUp="TableLeftClick" Grid.Column="2" Grid.Row="4" Margin="2" IsReadOnly="True" AutoGenerateColumns="False" CanUserSortColumns="True" Block.TextAlignment="Center" SelectionMode="Single" SelectionUnit="FullRow" CanUserResizeRows="False" CanUserReorderColumns="False" AlternationCount="1" AlternatingRowBackground="#BFF6F6F7" MinRowHeight="44" RowHeight="44" HorizontalGridLinesBrush="#FFC8C7CC" FontSize="14" VerticalContentAlignment="Center" VerticalGridLinesBrush="#FFB9B9B9" BorderBrush="#FFC8C7CC" Background="White" GridLinesVisibility="All" HeadersVisibility="Column" HorizontalScrollBarVisibility="Disabled">
@@ -89,6 +89,6 @@
 
         <Rectangle x:Name="horizLine1" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Fill="#FFA7A7AB"/>
         <Rectangle x:Name="horizLine2" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3" Fill="#FFA7A7AB"/>
-        <Rectangle x:Name="vertLine" Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Fill="#FF8E8E93"/>
+        <Rectangle x:Name="vertLine" Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Fill="#FFA7A7AB"/>
     </Grid>
 </Window>
