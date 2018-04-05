@@ -7,7 +7,7 @@ namespace DeliveryLab
 	/// <summary>
 	/// Логика взаимодействия для LoginWindow.xaml
 	/// </summary>
-	public partial class LoginWindow : Window
+	public partial class LoginWindow
 	{
 		public LoginWindow()
 		{
@@ -22,7 +22,7 @@ namespace DeliveryLab
 					"Логин не может содержать символы\n\",\", \":\", \", \"{\", \"}\", \"[\", \"]\"").Show();
 			else
 			{
-				Type group = Type.User;
+				var group = Type.User;
 				if (restCheckBox.IsChecked ?? false) group = Type.Restaurant;
 				SessionManager.RegisterUser(group, loginBox.Text, passBox.Password);
 			}

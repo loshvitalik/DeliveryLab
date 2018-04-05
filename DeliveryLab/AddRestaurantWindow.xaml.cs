@@ -1,13 +1,12 @@
 ﻿using System.Windows;
 using System.Windows.Input;
-using static DeliveryLab.MainWindow;
 
 namespace DeliveryLab
 {
 	/// <summary>
 	/// Логика взаимодействия для AddRestaurant.xaml
 	/// </summary>
-	public partial class AddRestaurantWindow : Window
+	public partial class AddRestaurantWindow
 	{
 		public AddRestaurantWindow()
 		{
@@ -16,9 +15,11 @@ namespace DeliveryLab
 
 		private void AddRestaurant()
 		{
-			if (textBox.Text.Contains("|"))
-				new Alert("Неверное название",
-					"Название не может содержать символ '|'.").Show();
+			if (textBox.Text.Contains(",") || textBox.Text.Contains(":") || textBox.Text.Contains("\"") ||
+			    textBox.Text.Contains("{") || textBox.Text.Contains("}") || textBox.Text.Contains("[") ||
+			    textBox.Text.Contains("]"))
+				new Alert("Неверный логин",
+					"Логин не может содержать символы\n\",\", \":\", \", \"{\", \"}\", \"[\", \"]\"").Show();
 			else
 			{
 				SessionManager.AddRestaurant(textBox.Text);

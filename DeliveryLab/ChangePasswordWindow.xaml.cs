@@ -6,7 +6,7 @@ namespace DeliveryLab
 	/// <summary>
 	/// Логика взаимодействия для ChangePasswordWindow.xaml
 	/// </summary>
-	public partial class ChangePasswordWindow : Window
+	public partial class ChangePasswordWindow
 	{
 		public ChangePasswordWindow()
 		{

@@ -13,11 +13,10 @@ namespace DeliveryLab
 
 	public class User
 	{
-		public int ID { get; private set; }
-		public Type Group { get; private set; }
-		public string Login { get; set; }
+		public int ID { get; }
+		public Type Group { get; }
+		public string Login { get; }
 		public string Password { get; set; }
-		public Order Order { get; set; }
 
 		public User(Type group, string login, string password)
 		{
@@ -25,18 +24,15 @@ namespace DeliveryLab
 			Group = group;
 			Login = login;
 			Password = password;
-			if (group != Type.Restaurant)
-				Order = new Order();
 		}
 
 		[JsonConstructor]
-		public User(int id, Type group, string login, string password, Order order)
+		public User(int id, Type group, string login, string password)
 		{
 			ID = id;
 			Group = group;
 			Login = login;
 			Password = password;
-			Order = order;
 		}
 	}
 }

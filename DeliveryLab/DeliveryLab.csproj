@@ -96,7 +96,7 @@
     <Compile Include="Alert.xaml.cs">
       <DependentUpon>Alert.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Order.cs" />
+    <Compile Include="OrderList.cs" />
     <Compile Include="Restaurant.cs" />
     <Compile Include="SaveSystem.cs" />
     <Compile Include="SessionManager.cs" />

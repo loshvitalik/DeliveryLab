@@ -52,16 +52,9 @@
                 <MenuItem Header="Загрузить рестораны из файла" Click="LoadRestsButtonClick"/>
                 <MenuItem Header="Сохранить всё" Click="SaveAllButtonClick"/>
                 <Separator/>
-                <MenuItem Header="Очистить всё">
-                    <MenuItem Header="...">
-                        <MenuItem Header="Очистить все файлы" Click="ClearAllButtonClick" Foreground="#FFFF3B30"/>
-                    </MenuItem>
-                </MenuItem>
+                <MenuItem Header="Очистить заказы" Click="ClearOrdersButtonClick" Foreground="#FFFF3B30"/>
             </MenuItem>
             <MenuItem Header="Настройки">
-                <MenuItem x:Name="autoRefreshButton" Header="Автообновление меню" Click="ToggleAutoRefresh" IsCheckable="True" IsChecked="True"/>
-                <MenuItem Header="Обновить" Click="UpdateViewButtonClick"/>
-                <Separator/>
                 <MenuItem x:Name="changePassButton" Header="Изменить пароль" Click="ShowChangePasswordWindow" IsEnabled="False"/>
                 <MenuItem x:Name="deleteRestaurantButton" Header="Удалить ресторан" Click="DeleteRestaurantButtonClick" Visibility="Collapsed" Foreground="#FFFF3B30"/>
                 <MenuItem x:Name="deleteAccountButton" Header="Удалить аккаунт" Click="DeleteAccountButtonClick" IsEnabled="False" Foreground="#FFFF3B30"/>
@@ -85,7 +78,7 @@
         <Button x:Name="addDishButton" Content="Добавить блюдо" Click="AddNewDish" Visibility="Collapsed" Grid.Column="0" Grid.Row="4" Margin="2,190,2,0" Height="45" Background="White" BorderBrush="#FFC8C7CC" Foreground="Gray" FontSize="16" VerticalAlignment="Top"/>
         <Button Content="Калькулятор" Click="OpenCalcButtonClick" Grid.Column="0" Grid.Row="4" Margin="2,0,2,2" Height="45" Background="White" BorderBrush="#FFC8C7CC" FontSize="16" VerticalAlignment="Bottom"/>
 
-        <DataGrid x:Name="table" Grid.Column="2" Grid.Row="4" Margin="2" IsReadOnly="True" AutoGenerateColumns="False" CanUserSortColumns="True" Block.TextAlignment="Center" SelectionMode="Single" SelectionUnit="FullRow" CanUserResizeRows="False" CanUserReorderColumns="False" AlternationCount="1" AlternatingRowBackground="#BFF6F6F7" MinRowHeight="44" RowHeight="44" HorizontalGridLinesBrush="#FFC8C7CC" FontSize="14" VerticalContentAlignment="Center" VerticalGridLinesBrush="#FFB9B9B9" BorderBrush="#FFC8C7CC" Background="White" GridLinesVisibility="All" HeadersVisibility="Column" HorizontalScrollBarVisibility="Disabled">
+        <DataGrid x:Name="table" MouseLeftButtonUp="TableLeftClick" Grid.Column="2" Grid.Row="4" Margin="2" IsReadOnly="True" AutoGenerateColumns="False" CanUserSortColumns="True" Block.TextAlignment="Center" SelectionMode="Single" SelectionUnit="FullRow" CanUserResizeRows="False" CanUserReorderColumns="False" AlternationCount="1" AlternatingRowBackground="#BFF6F6F7" MinRowHeight="44" RowHeight="44" HorizontalGridLinesBrush="#FFC8C7CC" FontSize="14" VerticalContentAlignment="Center" VerticalGridLinesBrush="#FFB9B9B9" BorderBrush="#FFC8C7CC" Background="White" GridLinesVisibility="All" HeadersVisibility="Column" HorizontalScrollBarVisibility="Disabled">
             <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem x:Name="addRowToOrder" Header="Заказать" Click="AddRowToOrderClick" Visibility="Collapsed"/>

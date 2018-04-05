@@ -9,7 +9,7 @@ namespace DeliveryLab
 {
 	class SessionManager
 	{
-		private static MainWindow Window = Application.Current.MainWindow as MainWindow;
+		private static readonly MainWindow Window = Application.Current.MainWindow as MainWindow;
 
 		public static void RegisterUser(Type group, string login, string password)
 		{
@@ -34,20 +34,25 @@ namespace DeliveryLab
 						if (CurrentUser.Group == Type.Restaurant)
 							SetRestaurantRights();
 					}
+
+					Window.ShowMenu("", new RoutedEventArgs());
 					break;
 				}
+
 			if (CurrentUser == null)
 				new Alert("Неверный пароль",
 					"Неверный логин или пароль.\nПроверьте правильность\nвведённых данных").Show();
 			else
 				foreach (Window w in Application.Current.Windows)
-					if (w is LoginWindow) w.Close();
+					if (w is LoginWindow)
+						w.Close();
 		}
 
 		public static void LogOut()
 		{
 			CurrentUser = null;
 			CurrentRestaurant = null;
+			Window.ShowMenu("", new RoutedEventArgs());
 			Window.Title = "Delivery Lab";
 			Window.loginButton.Content = "Авторизация";
 			Window.loginButton.Foreground = new SolidColorBrush(Color.FromRgb(255, 59, 48));
@@ -66,8 +71,8 @@ namespace DeliveryLab
 		{
 			if (EncryptString(oldPassword) == CurrentUser.Password)
 			{
-				CurrentUser.Password = Users.Where(u => u.ID == CurrentUser.ID).First().Password = EncryptString(newPassword);
-				SaveSystem.SaveAll();
+				CurrentUser.Password = Users.First(u => u.ID == CurrentUser.ID).Password = EncryptString(newPassword);
+				SaveSystem.SaveUsersToFile();
 			}
 			else
 				new Alert("Пароли не совпадают", "Текущий пароль введён неверно").Show();
@@ -77,14 +82,17 @@ namespace DeliveryLab
 		{
 			if (userToDelete.ID == CurrentUser.ID)
 				LogOut();
-			Users.Remove(Users.Where(u => u.ID == userToDelete.ID).First());
+			Users.Remove(Users.First(u => u.ID == userToDelete.ID));
 			if (userToDelete.Group == Type.Restaurant)
 			{
 				foreach (Dish d in Dishes.ToList())
-					if (d.Restaurant == CurrentRestaurant) Dishes.Remove(d);
+					if (d.RestID == CurrentRestaurant.ID)
+						Dishes.Remove(d);
 				foreach (Restaurant r in Restaurants.ToList())
-					if (r.OwnerID == userToDelete.ID) Restaurants.Remove(r);
+					if (r.OwnerID == userToDelete.ID)
+						Restaurants.Remove(r);
 			}
+
 			SaveSystem.SaveAll();
 		}
 
@@ -100,11 +108,12 @@ namespace DeliveryLab
 		public static void DeleteRestaurant(Restaurant restaurantToDelete)
 		{
 			foreach (Dish d in Dishes.ToList())
-				if (d.Restaurant == restaurantToDelete) Dishes.Remove(d);
+				if (d.RestID == restaurantToDelete.ID)
+					Dishes.Remove(d);
 			Restaurants.Remove(restaurantToDelete);
 			SaveSystem.SaveRestsToFile();
 			SaveSystem.SaveDishesToFile();
-			CurrentRestaurant = Restaurants.Where(r => r.OwnerID == CurrentUser.ID).FirstOrDefault();
+			CurrentRestaurant = Restaurants.FirstOrDefault(r => r.OwnerID == CurrentUser.ID);
 			if (CurrentRestaurant == null && restaurantToDelete.OwnerID == CurrentUser.ID)
 				new AddRestaurantWindow().Show();
 		}
@@ -115,6 +124,7 @@ namespace DeliveryLab
 			Window.loginButton.Foreground = new SolidColorBrush(Color.FromRgb(0, 122, 255));
 			Window.changePassButton.IsEnabled = true;
 			Window.deleteAccountButton.IsEnabled = true;
+			Window.showOrder.Content = "Заказ";
 			Window.showOrder.Visibility = Visibility.Visible;
 			Window.addRowToOrder.Visibility = Visibility.Visible;
 		}
@@ -125,11 +135,12 @@ namespace DeliveryLab
 			Window.adminMenu.Visibility = Visibility.Visible;
 			Window.showUsers.Visibility = Visibility.Visible;
 			Window.deleteRowButton.Visibility = Visibility.Visible;
+			Window.showOrder.Content = "Заказы";
 		}
 
 		private static void SetRestaurantRights()
 		{
-			CurrentRestaurant = Restaurants.Where(r => r.OwnerID == CurrentUser.ID).FirstOrDefault();
+			CurrentRestaurant = Restaurants.FirstOrDefault(r => r.OwnerID == CurrentUser.ID);
 			if (CurrentRestaurant == null)
 				new AddRestaurantWindow().Show();
 			else
@@ -138,8 +149,10 @@ namespace DeliveryLab
 				if (!CurrentRestaurant.IsVerified)
 					Window.Title += " (Не подтверждён)";
 			}
+
 			Window.deleteRestaurantButton.Visibility = Visibility.Visible;
 			Window.addDishButton.Visibility = Visibility.Visible;
+			Window.showOrder.Content = "Заказы";
 		}
 
 		public static string EncryptString(string password)

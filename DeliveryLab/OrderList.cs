@@ -1,20 +1,22 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using Newtonsoft.Json;
+using static DeliveryLab.MainWindow;
 
 namespace DeliveryLab
 {
-	public class Order
+	public class OrderList
 	{
 		public ObservableCollection<OrderItem> Items;
 
-		public Order()
+		public OrderList()
 		{
 			Items = new ObservableCollection<OrderItem>();
 		}
 
 		public void Add(Dish item)
 		{
-			var orderItem = Items.Where(i => i.Item == item).FirstOrDefault();
+			var orderItem = Items.FirstOrDefault(i => i.Item == item && i.UserID == CurrentUser.ID);
 			if (orderItem != null)
 			{
 				orderItem.Count++;
@@ -26,7 +28,7 @@ namespace DeliveryLab
 
 		public void Remove(Dish item)
 		{
-			var orderItem = Items.Where(i => i.Item == item).FirstOrDefault();
+			var orderItem = Items.FirstOrDefault(i => i.Item == item && i.UserID == CurrentUser.ID);
 			if (orderItem != null)
 				if (orderItem.Count == 1)
 					Items.Remove(orderItem);
@@ -40,16 +42,30 @@ namespace DeliveryLab
 
 	public class OrderItem
 	{
-		public Dish Item { get; set; }
+		public int UserID { get; }
+		public string UserName { get; }
+		public Dish Item { get; }
 		public int Count { get; set; }
 		public double Sum { get; set; }
 		public bool IsReady { get; set; }
 
 		public OrderItem(Dish item)
 		{
+			UserID = CurrentUser.ID;
+			UserName = CurrentUser.Login;
 			Item = item;
 			Count = 1;
 			Sum = item.Price;
+		}
+
+		[JsonConstructor]
+		private OrderItem(int userID, string userName, Dish item, int count, double sum)
+		{
+			UserID = userID;
+			UserName = userName;
+			Item = item;
+			Count = count;
+			Sum = sum;
 		}
 	}
 }

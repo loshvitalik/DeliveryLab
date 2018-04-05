@@ -9,9 +9,10 @@ namespace DeliveryLab
 	public class Restaurant
 	{
 		private int rating;
+
 		public int Rating
 		{
-			get { return rating; }
+			get => rating;
 			set
 			{
 				if (value < 0) rating = 0;
@@ -20,11 +21,10 @@ namespace DeliveryLab
 			}
 		}
 
-		public int ID { get; private set; }
-		public string Name { get; private set; }
-		public int OwnerID { get; private set; }
+		public int ID { get; }
+		public string Name { get; }
+		public int OwnerID { get; }
 		public bool IsVerified { get; set; }
-		public List<Order> Orders;
 
 		public Restaurant(string name, User owner)
 		{
@@ -32,31 +32,29 @@ namespace DeliveryLab
 			Name = name;
 			OwnerID = owner.ID;
 			Rating = 0;
-			Orders = new List<Order>();
 		}
 
 		[JsonConstructor]
-		private Restaurant(int id, int ownerID, string name, int rating, bool isVerified, List<Dish> dishes, List<Order> orders)
+		private Restaurant(int id, int ownerID, string name, int rating, bool isVerified)
 		{
 			ID = id;
 			OwnerID = ownerID;
 			Name = name;
 			Rating = rating;
 			IsVerified = isVerified;
-			Orders = orders;
 		}
 
 		public void UpdateDishes(List<string> dishes)
 		{
 			foreach (Dish d in Dishes.ToList())
-				if (d.Restaurant == this)
+				if (d.RestID == ID)
 					Dishes.Remove(d);
 			foreach (string d in dishes)
 			{
 				string[] dish = d.Split('|');
-				if (dish.Length == 2)
-					Dishes.Add(new Dish(this, dish[0], double.Parse(dish[1], CultureInfo.InvariantCulture)));
+				Dishes.Add(new Dish(ID, Name, dish[0], double.Parse(dish[1], CultureInfo.InvariantCulture)));
 			}
+
 			SaveSystem.SaveDishesToFile();
 		}
 
@@ -66,8 +64,9 @@ namespace DeliveryLab
 			{
 				string[] dish = d.Split('|');
 				if (dish.Length == 2)
-					Dishes.Add(new Dish(this, dish[0], double.Parse(dish[1], CultureInfo.InvariantCulture)));
+					Dishes.Add(new Dish(ID, Name, dish[0], double.Parse(dish[1], CultureInfo.InvariantCulture)));
 			}
+
 			SaveSystem.SaveDishesToFile();
 		}
 	}

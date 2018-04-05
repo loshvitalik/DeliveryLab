@@ -1,31 +1,39 @@
 ﻿using System;
+using System.Windows.Navigation;
 
 namespace DeliveryLab
 {
-	public class Dish
+	public class Dish : IComparable
 	{
 		private double price;
-		public double Price {
-			get { return price; }
+
+		public double Price
+		{
+			get => price;
 			private set
 			{
-				if (value < 0) throw new ArgumentException();
-				else price = value;
+				if (value < 0) price = 0;
+				price = value;
 			}
 		}
-		public Restaurant Restaurant { get; private set; }
-		public string Name { get; private set; }
 
-		public Dish(Restaurant restaurant, string name, double price)
+		public int RestID { get; }
+		public string RestName { get; }
+		public string Name { get; }
+
+		public Dish(int restID, string restName, string name, double price)
 		{
-			Restaurant = restaurant;
+			RestID = restID;
+			RestName = restName;
 			Name = name;
 			Price = price;
 		}
 
-		public override string ToString()
+		public int CompareTo(object obj)
 		{
-			return Name + "|" + Price;
+			Dish dish = obj as Dish;
+			if (RestID == dish?.RestID && Name == dish.Name && Price == dish.Price) return 0;
+			return -1;
 		}
 	}
 }

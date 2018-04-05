@@ -6,7 +6,7 @@ namespace DeliveryLab
 	/// <summary>
 	/// Логика взаимодействия для MessageWindow.xaml
 	/// </summary>
-	public partial class Alert : Window
+	public partial class Alert
 	{
 		public Alert(string title, string content)
 		{

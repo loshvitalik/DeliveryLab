@@ -4,7 +4,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
-using System.Threading;
 using static DeliveryLab.MainWindow;
 
 namespace DeliveryLab
@@ -13,6 +12,7 @@ namespace DeliveryLab
 	{
 		private static string UsersDB = Path.Combine(Environment.CurrentDirectory, "data\\users.txt");
 		private static string RestsDB = Path.Combine(Environment.CurrentDirectory, "data\\rests.txt");
+		private static string OrdersDB = Path.Combine(Environment.CurrentDirectory, "data\\orders.txt");
 		private static string DishesDB = Path.Combine(Environment.CurrentDirectory, "data\\dishes.txt");
 
 		public static void CreateFilesIfNotPresent()
@@ -23,6 +23,8 @@ namespace DeliveryLab
 				File.Create(UsersDB).Close();
 			if (!File.Exists(RestsDB))
 				File.Create(RestsDB).Close();
+			if (!File.Exists(OrdersDB))
+				File.Create(OrdersDB).Close();
 			if (!File.Exists(DishesDB))
 				File.Create(DishesDB).Close();
 		}
@@ -32,6 +34,7 @@ namespace DeliveryLab
 			LoadUsersFromFile();
 			LoadRestsFromFile();
 			LoadDishesFromFile();
+			LoadOrdersFromFile();
 		}
 
 		public static void SaveAll()
@@ -41,20 +44,13 @@ namespace DeliveryLab
 			SaveDishesToFile();
 		}
 
-		public static void ClearAll()
-		{
-			ClearUsers();
-			ClearRests();
-			ClearDishes();
-		}
-
 		private static void LoadUsersFromFile()
 		{
 			Users.Clear();
 			try
 			{
 				Users = JsonConvert.DeserializeObject<ObservableCollection<User>>(File.ReadAllText(UsersDB, Encoding.Default))
-					?? new ObservableCollection<User>();
+				        ?? new ObservableCollection<User>();
 			}
 			catch (JsonReaderException)
 			{
@@ -83,20 +79,13 @@ namespace DeliveryLab
 			LoadUsersFromFile();
 		}
 
-		private static void ClearUsers()
-		{
-			Users.Clear();
-			if (CurrentUser != null)
-				Users.Add(CurrentUser);
-			SaveUsersToFile();
-		}
-
 		private static void LoadRestsFromFile()
 		{
 			Restaurants.Clear();
 			try
 			{
-				Restaurants = JsonConvert.DeserializeObject<ObservableCollection<Restaurant>>(File.ReadAllText(RestsDB, Encoding.Default))
+				Restaurants =
+					JsonConvert.DeserializeObject<ObservableCollection<Restaurant>>(File.ReadAllText(RestsDB, Encoding.Default))
 					?? new ObservableCollection<Restaurant>();
 			}
 			catch (JsonReaderException)
@@ -126,19 +115,13 @@ namespace DeliveryLab
 			LoadRestsFromFile();
 		}
 
-		private static void ClearRests()
-		{
-			Restaurants.Clear();
-			SaveRestsToFile();
-		}
-
 		public static void LoadDishesFromFile()
 		{
 			Dishes.Clear();
 			try
 			{
 				Dishes = JsonConvert.DeserializeObject<ObservableCollection<Dish>>(File.ReadAllText(DishesDB, Encoding.Default))
-					?? new ObservableCollection<Dish>();
+				         ?? new ObservableCollection<Dish>();
 			}
 			catch (JsonReaderException)
 			{
@@ -153,10 +136,31 @@ namespace DeliveryLab
 			File.AppendAllText(DishesDB, JsonConvert.SerializeObject(Dishes), Encoding.Default);
 		}
 
-		private static void ClearDishes()
+		public static void LoadOrdersFromFile()
 		{
-			Dishes.Clear();
-			SaveDishesToFile();
+			Orders.Items.Clear();
+			try
+			{
+				Orders = JsonConvert.DeserializeObject<OrderList>(File.ReadAllText(OrdersDB, Encoding.Default))
+				         ?? new OrderList();
+			}
+			catch (JsonReaderException)
+			{
+				new Alert("Неверный формат файла", "Файл должен быть в формате JSON").Show();
+				OrdersDB = Path.Combine(Environment.CurrentDirectory, "data\\orders.txt");
+			}
+		}
+
+		public static void SaveOrdersToFile()
+		{
+			File.WriteAllBytes(OrdersDB, new byte[0]);
+			File.AppendAllText(OrdersDB, JsonConvert.SerializeObject(Orders), Encoding.Default);
+		}
+
+		public static void ClearOrders()
+		{
+			Orders.Items.Clear();
+			SaveOrdersToFile();
 		}
 	}
 }

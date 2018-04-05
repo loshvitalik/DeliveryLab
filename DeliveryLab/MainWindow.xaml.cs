@@ -2,29 +2,32 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 
 namespace DeliveryLab
 {
 	/// <summary>
 	/// Логика взаимодействия для MainWindow.xaml
 	/// </summary>
-	public partial class MainWindow : Window
+	public partial class MainWindow
 	{
 		public static ObservableCollection<User> Users;
 		public static ObservableCollection<Restaurant> Restaurants;
 		public static ObservableCollection<Dish> Dishes;
+		public static OrderList Orders;
 		public static User CurrentUser;
 		public static Restaurant CurrentRestaurant;
-		public static bool AutoRefresh = true;
 
 		public MainWindow()
 		{
 			InitializeComponent();
 			Users = new ObservableCollection<User>();
 			Restaurants = new ObservableCollection<Restaurant>();
+			Orders = new OrderList();
 			Dishes = new ObservableCollection<Dish>();
 			SaveSystem.CreateFilesIfNotPresent();
 			SaveSystem.LoadAll();
@@ -41,7 +44,7 @@ namespace DeliveryLab
 		}
 
 		// Левая колонка
-		private void ShowMenu(object sender, RoutedEventArgs e)
+		public void ShowMenu(object sender, RoutedEventArgs e)
 		{
 			title.Content = "Меню";
 			table.ItemsSource = Dishes;
@@ -57,7 +60,7 @@ namespace DeliveryLab
 			table.Columns.Add(new DataGridTextColumn()
 			{
 				Header = "Ресторан",
-				Binding = new Binding("Restaurant.Name"),
+				Binding = new Binding("RestName"),
 				Width = new DataGridLength(25, DataGridLengthUnitType.Star),
 			});
 			table.Columns.Add(new DataGridTextColumn()
@@ -66,7 +69,6 @@ namespace DeliveryLab
 				Binding = new Binding("Price"),
 				Width = new DataGridLength(25, DataGridLengthUnitType.Star),
 			});
-
 		}
 
 		private void ShowRestaurants(object sender, RoutedEventArgs e)
@@ -99,41 +101,39 @@ namespace DeliveryLab
 
 		private void ShowOrder(object sender, RoutedEventArgs e)
 		{
-			if (CurrentUser.Group == Type.Restaurant)
-				return;
-			else
+			table.ItemsSource = Orders.Items.Where(i =>
+				(CurrentUser.Group == Type.User)
+					? i.UserID == CurrentUser.ID
+					: (CurrentUser.Group != Type.Restaurant) || i.Item.RestID == CurrentRestaurant.ID);
+			title.Content = CurrentUser.Group == Type.User ? "Заказ" : "Заказы";
+			addRowToOrder.Visibility = Visibility.Collapsed;
+			deleteRowButton.Visibility = Visibility.Visible;
+			table.Columns.Clear();
+			table.Columns.Add(new DataGridCheckBoxColumn()
 			{
-				title.Content = "Заказ";
-				table.ItemsSource = CurrentUser.Order.Items;
-				addRowToOrder.Visibility = Visibility.Collapsed;
-				deleteRowButton.Visibility = Visibility.Visible;
-				table.Columns.Clear();
-				table.Columns.Add(new DataGridCheckBoxColumn()
-				{
-					Header = "Готовность",
-					Binding = new Binding("IsReady"),
-					Width = new DataGridLength(15, DataGridLengthUnitType.Star),
-				});
-				table.Columns.Add(new DataGridTextColumn()
-				{
-					Header = "Название",
-					Binding = new Binding("Item.Name"),
-					Width = new DataGridLength(50, DataGridLengthUnitType.Star),
-				});
-				table.Columns.Add(new DataGridTextColumn()
-				{
-					Header = "Кол-во",
-					Binding = new Binding("Count"),
-					Width = new DataGridLength(10, DataGridLengthUnitType.Star),
-				});
-				table.Columns.Add(new DataGridTextColumn()
-				{
-					Header = "Стоимость",
-					Binding = new Binding("Sum"),
-					Width = new DataGridLength(25, DataGridLengthUnitType.Star),
-				});
-			}
+				Header = "Готовность",
+				Binding = new Binding("IsReady"),
 
+				Width = new DataGridLength(15, DataGridLengthUnitType.Star),
+			});
+			table.Columns.Add(new DataGridTextColumn()
+			{
+				Header = "Название",
+				Binding = new Binding("Item.Name"),
+				Width = new DataGridLength(50, DataGridLengthUnitType.Star),
+			});
+			table.Columns.Add(new DataGridTextColumn()
+			{
+				Header = "Кол-во",
+				Binding = new Binding("Count"),
+				Width = new DataGridLength(10, DataGridLengthUnitType.Star),
+			});
+			table.Columns.Add(new DataGridTextColumn()
+			{
+				Header = "Стоимость",
+				Binding = new Binding("Sum"),
+				Width = new DataGridLength(25, DataGridLengthUnitType.Star),
+			});
 		}
 
 		private void ShowUsers(object sender, RoutedEventArgs e)
@@ -167,7 +167,7 @@ namespace DeliveryLab
 		{
 			if (CurrentUser?.Group == Type.Restaurant)
 				CurrentRestaurant.AddDishes(new List<string>()
-				{ "Рандомная еда|" + new Random().Next(0, 10000) });
+					{"Рандомная еда|" + new Random().Next(0, 10000)});
 		}
 
 		private void OpenCalcButtonClick(object sender, RoutedEventArgs e)
@@ -197,19 +197,9 @@ namespace DeliveryLab
 			SaveSystem.SaveAll();
 		}
 
-		private void ClearAllButtonClick(object sender, RoutedEventArgs e)
+		private void ClearOrdersButtonClick(object sender, RoutedEventArgs e)
 		{
-			SaveSystem.ClearAll();
-		}
-
-		private void ToggleAutoRefresh(object sender, RoutedEventArgs e)
-		{
-			AutoRefresh = autoRefreshButton.IsChecked = !AutoRefresh;
-		}
-
-		private void UpdateViewButtonClick(object sender, RoutedEventArgs e)
-		{
-			table.Items.Refresh();
+			SaveSystem.ClearOrders();
 		}
 
 		private void ShowChangePasswordWindow(object sender, RoutedEventArgs e)
@@ -230,7 +220,7 @@ namespace DeliveryLab
 		private void ShowHelpWindow(object sender, RoutedEventArgs e)
 		{
 			new Alert("Помощь — Delivery Lab",
-				"1. Зарегистрируйтесь или авторизуйтесь\n2. Выберите блюда в меню справа\n3. Сделайте заказ и ждите доставки!")
+					"1. Зарегистрируйтесь или авторизуйтесь\n2. Выберите блюда в меню справа\n3. Сделайте заказ и ждите доставки!")
 				.Show();
 		}
 
@@ -240,29 +230,58 @@ namespace DeliveryLab
 				"Delivery Lab v. 0.3 alpha\n© 2018 loshvitalik, MrBlacktop").Show();
 		}
 
+		private void TableLeftClick(object sender, MouseButtonEventArgs e)
+		{
+			if (title.Content.ToString() == "Заказы" && CurrentUser.Group != Type.User)
+			{
+				var selectedItem = table.SelectedItem;
+				if (selectedItem is OrderItem item)
+				{
+					var orderItem = Orders.Items.First(i => i == item);
+					orderItem.IsReady = !orderItem.IsReady;
+					table.Items.Refresh();
+					SaveSystem.SaveOrdersToFile();
+				}
+			}
+		}
+
 		private void AddRowToOrderClick(object sender, RoutedEventArgs e)
 		{
-			CurrentUser.Order.Add((Dish)table.SelectedItem);
+			Orders.Add((Dish) table.SelectedItem);
 			table.Items.Refresh();
-			SaveSystem.SaveUsersToFile();
+			SaveSystem.SaveOrdersToFile();
 		}
 
 		private void DeleteRowButtonClick(object sender, RoutedEventArgs e)
 		{
 			var selectedItem = table.SelectedItem;
-			if (selectedItem is Dish && CurrentUser.Group == Type.Administrator)
-				Dishes.Remove((Dish)selectedItem);
-			if (selectedItem is Restaurant && 
-				(CurrentUser.Group == Type.Administrator ||
-				(CurrentUser.Group == Type.Restaurant && CurrentRestaurant.OwnerID == CurrentUser.ID)))
-				SessionManager.DeleteRestaurant((Restaurant)selectedItem);
-			if (selectedItem is OrderItem && CurrentUser.Group != Type.Restaurant)
-				CurrentUser.Order.Remove(((OrderItem)selectedItem).Item);
-			if (selectedItem is User && CurrentUser.Group == Type.Administrator)
-				SessionManager.DeleteAccount((User)selectedItem);
-			table.Items.Refresh();
-			SaveSystem.SaveAll();
+			if (selectedItem is Dish dish && CurrentUser.Group == Type.Administrator)
+			{
+				Dishes.Remove(dish);
+				SaveSystem.SaveDishesToFile();
+			}
 
+			if (selectedItem is Restaurant restaurant &&
+			    (CurrentUser.Group == Type.Administrator ||
+			     CurrentUser.Group == Type.Restaurant && CurrentRestaurant.OwnerID == CurrentUser.ID))
+			{
+				SessionManager.DeleteRestaurant(restaurant);
+				SaveSystem.SaveAll();
+			}
+
+			if (selectedItem is OrderItem orderItem && CurrentUser.Group != Type.Restaurant)
+			{
+				Orders.Remove(orderItem.Item);
+				SaveSystem.SaveOrdersToFile();
+			}
+
+			if (selectedItem is User user && CurrentUser.Group == Type.Administrator)
+			{
+				SessionManager.DeleteAccount(user);
+				SaveSystem.SaveAll();
+			}
+
+			table.Items.Refresh();
 		}
 
 		private void CloseAppButtonClick(object sender, RoutedEventArgs e)
