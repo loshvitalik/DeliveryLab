@@ -22,20 +22,15 @@ namespace DeliveryLab
 		public static void LogIn(string login, string password)
 		{
 			string encryptedPass = EncryptString(password);
-			foreach (var u in Users)
-				if (login == u.Login)
+			foreach (var u in Users.Where(u => u.Login == login))
+				if (encryptedPass == u.Password)
 				{
-					if (encryptedPass == u.Password)
-					{
-						CurrentUser = u;
-						SetCommonRights();
-						if (CurrentUser.Group == Type.Administrator)
-							SetAdminRights();
-						if (CurrentUser.Group == Type.Restaurant)
-							SetRestaurantRights();
-					}
-
-					break;
+					CurrentUser = u;
+					SetCommonRights();
+					if (CurrentUser.Group == Type.Administrator)
+						SetAdminRights();
+					if (CurrentUser.Group == Type.Restaurant)
+						SetRestaurantRights();
 				}
 
 			if (CurrentUser == null)
@@ -104,12 +99,12 @@ namespace DeliveryLab
 
 		public static void DeleteRestaurant(Restaurant restaurantToDelete)
 		{
-			foreach (var d in Dishes.ToList())
-				if (d.RestId == restaurantToDelete.Id)
-					Dishes.Remove(d);
+			foreach (var i in Orders.Items.Where(i => i.Item.RestId == restaurantToDelete.Id))
+				Orders.Items.Remove(i);
+			foreach (var d in Dishes.Where(d => d.RestId == restaurantToDelete.Id).ToList())
+				Dishes.Remove(d);
 			Restaurants.Remove(restaurantToDelete);
-			SaveSystem.SaveRestsToFile();
-			SaveSystem.SaveDishesToFile();
+			SaveSystem.SaveAll();
 			CurrentRestaurant = Restaurants.FirstOrDefault(r => r.OwnerId == CurrentUser.Id);
 			if (CurrentRestaurant == null && restaurantToDelete.OwnerId == CurrentUser.Id)
 				new AddRestaurantWindow().Show();
@@ -145,10 +140,14 @@ namespace DeliveryLab
 				Window.Title = "Delivery Lab — " + CurrentRestaurant.Name;
 				if (!CurrentRestaurant.IsVerified)
 					Window.Title += " (Не подтверждён)";
+				Window.showOrder.Content = "Заказы";
+				Window.restaurantMenu.Visibility = Visibility.Visible;
+				if (Orders.Items.Any(i => i.Item.RestId == CurrentRestaurant.Id && !i.IsReady))
+				{
+					new Alert("Есть новые заказы!", "У вас есть новые заказы,\nожидающие доставки").Show();
+					Window.ShowOrder("", new RoutedEventArgs());
+				}
 			}
-
-			Window.showOrder.Content = "Заказы";
-			Window.restaurantMenu.Visibility = Visibility.Visible;
 		}
 
 		public static string EncryptString(string password)

@@ -42,6 +42,7 @@ namespace DeliveryLab
 			SaveUsersToFile();
 			SaveRestsToFile();
 			SaveDishesToFile();
+			SaveOrdersToFile();
 		}
 
 		private static void LoadUsersFromFile()

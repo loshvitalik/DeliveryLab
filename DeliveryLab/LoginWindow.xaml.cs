@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using static DeliveryLab.MainWindow;
 
@@ -33,11 +34,7 @@ namespace DeliveryLab
 
 		private void CheckIfRegistered()
 		{
-			var userFound = false;
-			foreach (var u in Users)
-				if (loginBox.Text == u.Login)
-					userFound = true;
-			if (userFound)
+			if (Users.Any(u => loginBox.Text == u.Login))
 			{
 				regButton.Visibility = Visibility.Collapsed;
 				restCheckBox.Visibility = Visibility.Collapsed;

@@ -46,7 +46,7 @@ namespace DeliveryLab
 		// -Администрирование
 		private void VerifyAllButtonClick(object sender, RoutedEventArgs e)
 		{
-			foreach (var r in Restaurants)
+			foreach (var r in Restaurants.Where(r => !r.IsVerified))
 				r.IsVerified = true;
 			table.Items.Refresh();
 		}
@@ -170,7 +170,7 @@ namespace DeliveryLab
 			});
 		}
 
-		private void ShowOrder(object sender, RoutedEventArgs e)
+		public void ShowOrder(object sender, RoutedEventArgs e)
 		{
 			table.ItemsSource = Orders.Items.Where(i =>
 				CurrentUser.Group == Type.User
@@ -285,7 +285,6 @@ namespace DeliveryLab
 				case Restaurant restaurant when (CurrentUser.Group == Type.Administrator ||
 				                                 CurrentUser.Group == Type.Restaurant && CurrentRestaurant.OwnerId == CurrentUser.Id):
 					SessionManager.DeleteRestaurant(restaurant);
-					SaveSystem.SaveAll();
 					break;
 				case OrderItem orderItem when CurrentUser.Group != Type.Restaurant:
 					Orders.Remove(orderItem.Item);
@@ -297,7 +296,6 @@ namespace DeliveryLab
 					break;
 				case User user when CurrentUser.Group == Type.Administrator:
 					SessionManager.DeleteAccount(user);
-					SaveSystem.SaveAll();
 					break;
 			}
 

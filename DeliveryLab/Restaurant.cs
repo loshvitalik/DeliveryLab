@@ -8,7 +8,7 @@ using static DeliveryLab.MainWindow;
 namespace DeliveryLab
 {
 	public class Restaurant
-	{ 
+	{
 		public Restaurant(string name, User owner)
 		{
 			Id = Restaurants.Any() ? Restaurants.Last().Id + 1 : 0;
@@ -28,6 +28,7 @@ namespace DeliveryLab
 		}
 
 		private int rating;
+
 		public int Rating
 		{
 			get => rating;
@@ -46,9 +47,8 @@ namespace DeliveryLab
 
 		public void ReplaceDishes(List<string> dishes)
 		{
-			foreach (var d in Dishes.ToList())
-				if (d.RestId == Id)
-					Dishes.Remove(d);
+			foreach (var d in Dishes.Where(d => d.RestId == Id).ToList())
+				Dishes.Remove(d);
 			AddDishes(dishes);
 		}
 
