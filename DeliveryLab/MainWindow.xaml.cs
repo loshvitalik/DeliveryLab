@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
@@ -43,11 +44,13 @@ namespace DeliveryLab
 		}
 
 		// Верхнее меню
+
 		// -Администрирование
 		private void VerifyAllButtonClick(object sender, RoutedEventArgs e)
 		{
 			foreach (var r in Restaurants.Where(r => !r.IsVerified))
 				r.IsVerified = true;
+			SaveSystem.SaveRestsToFile();
 			table.Items.Refresh();
 		}
 
@@ -66,6 +69,11 @@ namespace DeliveryLab
 			SaveSystem.SaveAll();
 		}
 
+		private void ExportToExcelButtonClick(object sender, RoutedEventArgs e)
+		{
+			SaveSystem.ExportToExcel();
+		}
+
 		private void ClearAllOrdersButtonClick(object sender, RoutedEventArgs e)
 		{
 			SaveSystem.ClearOrders();
@@ -77,6 +85,7 @@ namespace DeliveryLab
 		{
 			foreach (var item in Orders.Items.Where(i => i.Item.RestId == CurrentRestaurant.Id))
 				item.IsReady = true;
+			SaveSystem.SaveOrdersToFile();
 			table.Items.Refresh();
 		}
 
@@ -116,18 +125,17 @@ namespace DeliveryLab
 		}
 
 		// Левое меню
+
 		public void ShowMenu(object sender, RoutedEventArgs e)
 		{
 			title.Content = "Меню";
 			table.ItemsSource = Dishes;
-			addRowToOrder.Visibility = CurrentUser?.Group != Type.Restaurant ? Visibility.Visible : Visibility.Collapsed;
-			deleteRowButton.Visibility = CurrentUser?.Group == Type.Administrator ? Visibility.Visible : Visibility.Collapsed;
 			table.Columns.Clear();
 			table.Columns.Add(new DataGridTextColumn
 			{
 				Header = "Название",
 				Binding = new Binding("Name"),
-				Width = new DataGridLength(50, DataGridLengthUnitType.Star)
+				Width = new DataGridLength(45, DataGridLengthUnitType.Star)
 			});
 			table.Columns.Add(new DataGridTextColumn
 			{
@@ -139,35 +147,56 @@ namespace DeliveryLab
 			{
 				Header = "Стоимость",
 				Binding = new Binding("Price"),
-				Width = new DataGridLength(25, DataGridLengthUnitType.Star)
+				Width = new DataGridLength(20, DataGridLengthUnitType.Star)
 			});
+			if (CurrentUser?.Group == Type.User || CurrentUser?.Group == Type.Administrator)
+				table.Columns.Add(new DataGridTextColumn
+				{
+					Header = "Заказ",
+					CellStyle = FindResource("addCell") as Style,
+					Width = new DataGridLength(10, DataGridLengthUnitType.Star)
+				});
+			if (CurrentUser?.Group == Type.Administrator || CurrentUser?.Group == Type.Restaurant)
+				table.Columns.Add(new DataGridTextColumn
+				{
+					Header = "Удалить",
+					CellStyle = FindResource("removeCell") as Style,
+					Width = new DataGridLength(10, DataGridLengthUnitType.Star)
+				});
 		}
 
 		private void ShowRestaurants(object sender, RoutedEventArgs e)
 		{
 			title.Content = "Рестораны";
 			table.ItemsSource = Restaurants;
-			addRowToOrder.Visibility = Visibility.Collapsed;
-			deleteRowButton.Visibility = CurrentUser?.Group != Type.User ? Visibility.Visible : Visibility.Collapsed;
 			table.Columns.Clear();
 			table.Columns.Add(new DataGridTextColumn
 			{
 				Header = "Название",
 				Binding = new Binding("Name"),
-				Width = new DataGridLength(50, DataGridLengthUnitType.Star)
+				Width = new DataGridLength(45, DataGridLengthUnitType.Star)
 			});
 			table.Columns.Add(new DataGridTextColumn
 			{
 				Header = "Рейтинг",
 				Binding = new Binding("Rating"),
+				CellStyle = FindResource("ratingCell") as Style,
 				Width = new DataGridLength(25, DataGridLengthUnitType.Star)
 			});
 			table.Columns.Add(new DataGridCheckBoxColumn
 			{
 				Header = "Проверен",
 				Binding = new Binding("IsVerified"),
-				Width = new DataGridLength(25, DataGridLengthUnitType.Star)
+				CellStyle = FindResource("checkCell") as Style,
+				Width = new DataGridLength(20, DataGridLengthUnitType.Star)
 			});
+			if (CurrentUser?.Group != Type.User)
+				table.Columns.Add(new DataGridTextColumn
+				{
+					Header = "Удалить",
+					CellStyle = FindResource("removeCell") as Style,
+					Width = new DataGridLength(10, DataGridLengthUnitType.Star)
+				});
 		}
 
 		public void ShowOrder(object sender, RoutedEventArgs e)
@@ -177,8 +206,6 @@ namespace DeliveryLab
 					? i.UserId == CurrentUser.Id
 					: CurrentUser.Group == Type.Administrator || i.Item.RestId == CurrentRestaurant.Id);
 			title.Content = CurrentUser.Group == Type.User ? "Заказ" : "Заказы";
-			addRowToOrder.Visibility = Visibility.Collapsed;
-			deleteRowButton.Visibility = Visibility.Visible;
 			table.Columns.Clear();
 			if (CurrentUser.Group != Type.User)
 				table.Columns.Add(new DataGridTextColumn
@@ -191,13 +218,13 @@ namespace DeliveryLab
 			{
 				Header = "Заказ",
 				Binding = new Binding("Item.Name"),
-				Width = new DataGridLength(50, DataGridLengthUnitType.Star)
+				Width = new DataGridLength(45, DataGridLengthUnitType.Star)
 			});
 			table.Columns.Add(new DataGridTextColumn
 			{
 				Header = "Кол-во",
 				Binding = new Binding("Count"),
-				Width = new DataGridLength(20, DataGridLengthUnitType.Star)
+				Width = new DataGridLength(15, DataGridLengthUnitType.Star)
 			});
 			table.Columns.Add(new DataGridTextColumn
 			{
@@ -209,22 +236,28 @@ namespace DeliveryLab
 			{
 				Header = "Готов",
 				Binding = new Binding("IsReady"),
+				CellStyle = FindResource("checkCell") as Style,
 				Width = new DataGridLength(10, DataGridLengthUnitType.Star)
 			});
+			if (CurrentUser.Group != Type.Restaurant)
+				table.Columns.Add(new DataGridTextColumn
+				{
+					Header = "Удалить",
+					CellStyle = FindResource("removeCell") as Style,
+					Width = new DataGridLength(10, DataGridLengthUnitType.Star)
+				});
 		}
 
 		private void ShowUsers(object sender, RoutedEventArgs e)
 		{
 			title.Content = "Пользователи";
 			table.ItemsSource = Users;
-			addRowToOrder.Visibility = Visibility.Collapsed;
-			deleteRowButton.Visibility = CurrentUser?.Group == Type.Administrator ? Visibility.Visible : Visibility.Collapsed;
 			table.Columns.Clear();
 			table.Columns.Add(new DataGridTextColumn
 			{
 				Header = "Логин",
 				Binding = new Binding("Login"),
-				Width = new DataGridLength(50, DataGridLengthUnitType.Star)
+				Width = new DataGridLength(45, DataGridLengthUnitType.Star)
 			});
 			table.Columns.Add(new DataGridTextColumn
 			{
@@ -236,7 +269,13 @@ namespace DeliveryLab
 			{
 				Header = "Группа",
 				Binding = new Binding("Group"),
-				Width = new DataGridLength(25, DataGridLengthUnitType.Star)
+				Width = new DataGridLength(20, DataGridLengthUnitType.Star)
+			});
+			table.Columns.Add(new DataGridTextColumn
+			{
+				Header = "Удалить",
+				CellStyle = FindResource("removeCell") as Style,
+				Width = new DataGridLength(10, DataGridLengthUnitType.Star)
 			});
 		}
 
@@ -245,48 +284,56 @@ namespace DeliveryLab
 			Process.Start("calc.exe");
 		}
 
-		// Левый клик
-		private void TableLeftClick(object sender, MouseButtonEventArgs e)
+		// Кнопки в таблице
+
+		private void UpdateRatingButtonClick(object sender, MouseButtonEventArgs e)
 		{
-			if (CurrentUser?.Group != Type.Restaurant && CurrentUser?.Group != Type.Administrator) return;
-			switch (table.SelectedItem)
+			if (CurrentUser?.Group == Type.Administrator)
 			{
-				case OrderItem oitem:
-					var orderItem = Orders.Items.First(i => i == oitem);
-					orderItem.IsReady = !orderItem.IsReady;
-					table.Items.Refresh();
-					SaveSystem.SaveOrdersToFile();
-					break;
-				case Restaurant ritem when CurrentUser.Group == Type.Administrator:
-					var restaurant = Restaurants.First(r => r.Id == ritem.Id);
-					restaurant.IsVerified = !restaurant.IsVerified;
-					table.Items.Refresh();
-					SaveSystem.SaveRestsToFile();
-					break;
+				((Restaurant) table.SelectedItem).Rating++;
+				table.Items.Refresh();
+				SaveSystem.SaveRestsToFile();
 			}
 		}
-		
-		// Правый клик
-		private void AddRowToOrderClick(object sender, RoutedEventArgs e)
+
+		private void CheckButtonClick(object sender, MouseButtonEventArgs e)
+		{
+			switch (table.SelectedItem)
+			{
+				case Restaurant ritem when CurrentUser?.Group == Type.Administrator:
+					var restaurant = Restaurants.First(r => r.Id == ritem.Id);
+					restaurant.IsVerified = !restaurant.IsVerified;
+					SaveSystem.SaveRestsToFile();
+					break;
+				case OrderItem oitem when CurrentUser?.Group == Type.Restaurant && oitem.Item.RestId == CurrentRestaurant.Id:
+					var orderItem = Orders.Items.First(i => i == oitem);
+					orderItem.IsReady = !orderItem.IsReady;
+					SaveSystem.SaveOrdersToFile();
+					break;
+			}
+
+			table.Items.Refresh();
+		}
+
+		private void AddButtonClick(object sender, MouseButtonEventArgs e)
 		{
 			Orders.Add((Dish) table.SelectedItem);
-			table.Items.Refresh();
 			SaveSystem.SaveOrdersToFile();
 		}
 
-		private void DeleteRowButtonClick(object sender, RoutedEventArgs e)
+		private void RemoveButtonClick(object sender, MouseButtonEventArgs e)
 		{
 			switch (table.SelectedItem)
 			{
-				case Dish dish when CurrentUser.Group == Type.Administrator:
+				case Dish dish when CurrentUser.Group == Type.Administrator || dish.RestId == CurrentRestaurant.Id:
 					Dishes.Remove(dish);
 					SaveSystem.SaveDishesToFile();
 					break;
-				case Restaurant restaurant when (CurrentUser.Group == Type.Administrator ||
-				                                 CurrentUser.Group == Type.Restaurant && CurrentRestaurant.OwnerId == CurrentUser.Id):
+				case Restaurant restaurant
+					when CurrentUser.Group == Type.Administrator || restaurant.OwnerId == CurrentUser.Id:
 					SessionManager.DeleteRestaurant(restaurant);
 					break;
-				case OrderItem orderItem when CurrentUser.Group != Type.Restaurant:
+				case OrderItem orderItem:
 					Orders.Remove(orderItem.Item);
 					table.ItemsSource = Orders.Items.Where(i =>
 						CurrentUser.Group == Type.User
@@ -294,7 +341,7 @@ namespace DeliveryLab
 							: CurrentUser.Group == Type.Administrator || i.Item.RestId == CurrentRestaurant.Id);
 					SaveSystem.SaveOrdersToFile();
 					break;
-				case User user when CurrentUser.Group == Type.Administrator:
+				case User user:
 					SessionManager.DeleteAccount(user);
 					break;
 			}

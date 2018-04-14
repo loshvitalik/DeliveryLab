@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         FocusManager.FocusedElement="{Binding ElementName=textBox}"
-        Title="Добавить блюда" Height="350" Width="350" WindowStartupLocation="CenterOwner" Background="#FFEFEFF4" WindowStyle="ThreeDBorderWindow">
+        Title="Добавить блюда" Height="400" Width="350" WindowStartupLocation="CenterOwner" Background="#FFEFEFF4" WindowStyle="ThreeDBorderWindow">
 
     <Window.Resources>
         <Style TargetType="Button">
@@ -22,6 +22,7 @@
             <RowDefinition Height="25*" />
             <RowDefinition Height="75*" />
             <RowDefinition Height="48" />
+            <RowDefinition Height="47"/>
             <RowDefinition Height="48" />
         </Grid.RowDefinitions>
 
@@ -35,6 +36,7 @@
 
         <Button Content="Заменить старые" Click="ReplaceButtonClick" Grid.Column="0" Grid.Row="2" Margin="2,2,1,1" />
         <Button Content="Добавить новые" Click="AddButtonClick" Grid.Column="1" Grid.Row="2" Margin="1,2,2,1" />
-        <Button Content="Отмена" Click="CloseWindow" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Margin="2,1,2,2" Foreground="#FFFF3B30" />
+        <Button Content="Загрузить из файла Excel" Click="LoadFromExcelButtonClick" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Margin="2,1,2,1"/>
+        <Button Content="Отмена" Click="CloseWindow" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Margin="2,1,2,2" Foreground="#FFFF3B30" />
     </Grid>
 </Window>

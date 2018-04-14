@@ -24,6 +24,11 @@ namespace DeliveryLab
 				new Alert("Неверный логин",
 					"Логин не может содержать символы\n\",\", \":\", \"{\", \"}\", \"[\", \"]\" и \"").Show();
 			}
+			else if (Users.Any(u => loginBox.Text == u.Login))
+			{
+				new Alert("Неверный логин",
+					"Такой пользователь уже\nзарегистрирован").Show();
+			}
 			else
 			{
 				var group = Type.User;
@@ -34,16 +39,6 @@ namespace DeliveryLab
 
 		private void CheckIfRegistered()
 		{
-			if (Users.Any(u => loginBox.Text == u.Login))
-			{
-				regButton.Visibility = Visibility.Collapsed;
-				restCheckBox.Visibility = Visibility.Collapsed;
-			}
-			else
-			{
-				regButton.Visibility = Visibility.Visible;
-				restCheckBox.Visibility = Visibility.Visible;
-			}
 		}
 
 		private void LoginKeyPress(object sender, KeyEventArgs e)

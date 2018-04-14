@@ -34,8 +34,7 @@ namespace DeliveryLab
 			get => rating;
 			set
 			{
-				if (value < 0) rating = 0;
-				else if (value > 5) rating = 5;
+				if (value < 0 || value > 5) rating = 0;
 				else rating = value;
 			}
 		}

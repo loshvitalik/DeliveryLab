@@ -13,7 +13,7 @@ namespace DeliveryLab
 
 		public static void RegisterUser(Type group, string login, string password)
 		{
-			var encryptedPass = EncryptString(password);
+			string encryptedPass = EncryptString(password);
 			Users.Add(new User(group, login, encryptedPass));
 			SaveSystem.SaveUsersToFile();
 			LogIn(login, password);
@@ -21,7 +21,7 @@ namespace DeliveryLab
 
 		public static void LogIn(string login, string password)
 		{
-			string encryptedPass = EncryptString(password);
+			var encryptedPass = EncryptString(password);
 			foreach (var u in Users.Where(u => u.Login == login))
 				if (encryptedPass == u.Password)
 				{
@@ -55,8 +55,6 @@ namespace DeliveryLab
 			Window.restaurantMenu.Visibility = Visibility.Collapsed;
 			Window.showOrder.Visibility = Visibility.Collapsed;
 			Window.showUsers.Visibility = Visibility.Collapsed;
-			Window.addRowToOrder.Visibility = Visibility.Collapsed;
-			Window.deleteRowButton.Visibility = Visibility.Collapsed;
 		}
 
 		public static void ChangePassword(string oldPassword, string newPassword)
@@ -74,10 +72,12 @@ namespace DeliveryLab
 		{
 			if (userToDelete.Group == Type.Restaurant)
 			{
-				foreach (var d in Dishes.Where(d => d.RestId == CurrentRestaurant.Id).ToArray())
-					Dishes.Remove(d);
 				foreach (var r in Restaurants.Where(r => r.OwnerId == userToDelete.Id).ToArray())
+				{
+					foreach (var d in Dishes.Where(d => d.RestId == r.Id).ToArray())
+						Dishes.Remove(d);
 					Restaurants.Remove(r);
+				}
 			}
 
 			if (userToDelete.Id == CurrentUser.Id)
@@ -118,7 +118,7 @@ namespace DeliveryLab
 			Window.showOrder.Content = "Заказ";
 			Window.settingsMenu.Visibility = Visibility.Visible;
 			Window.showOrder.Visibility = Visibility.Visible;
-			Window.addRowToOrder.Visibility = Visibility.Visible;
+			Window.clearOrderButton.Visibility = Visibility.Visible;
 		}
 
 		private static void SetAdminRights()
@@ -127,7 +127,6 @@ namespace DeliveryLab
 			Window.showOrder.Content = "Заказы";
 			Window.adminMenu.Visibility = Visibility.Visible;
 			Window.showUsers.Visibility = Visibility.Visible;
-			Window.deleteRowButton.Visibility = Visibility.Visible;
 		}
 
 		private static void SetRestaurantRights()
@@ -142,6 +141,7 @@ namespace DeliveryLab
 					Window.Title += " (Не подтверждён)";
 				Window.showOrder.Content = "Заказы";
 				Window.restaurantMenu.Visibility = Visibility.Visible;
+				Window.clearOrderButton.Visibility = Visibility.Collapsed;
 				if (Orders.Items.Any(i => i.Item.RestId == CurrentRestaurant.Id && !i.IsReady))
 				{
 					new Alert("Есть новые заказы!", "У вас есть новые заказы,\nожидающие доставки").Show();

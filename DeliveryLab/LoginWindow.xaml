@@ -38,9 +38,9 @@
         <Label Content="Пароль" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center" FontSize="16" />
         <PasswordBox x:Name="passBox" KeyUp="PassEnterKeyPress" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Margin="4,0,4,0" Background="White" BorderBrush="#FFC8C7CC" FontSize="16" VerticalContentAlignment="Center" />
 
-        <CheckBox x:Name="restCheckBox" Content="Ресторан" Visibility="Collapsed" Grid.Column="0" Grid.Row="4" Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="16" Foreground="DimGray" />
+        <CheckBox x:Name="restCheckBox" Content="Ресторан" Grid.Column="0" Grid.Row="4" Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="16" Foreground="DimGray" />
 
-        <Button x:Name="regButton" Content="Зарегистрироваться" Click="RegisterUser" Visibility="Collapsed" Grid.Column="1" Grid.Row="4" Margin="1,2,2,2" />
+        <Button x:Name="regButton" Content="Зарегистрироваться" Click="RegisterUser" Grid.Column="1" Grid.Row="4" Margin="1,2,2,2" />
         <Button x:Name="cancelButton" Content="Отмена" Click="CloseWindow" Grid.Column="0" Grid.Row="5" Margin="2,2,1,2" Foreground="#FFFF3B30" />
         <Button x:Name="loginButton" Content="Войти" Click="LoginUserButtonClick" Grid.Column="1" Grid.Row="5" Margin="1,2,2,2" />
     </Grid>

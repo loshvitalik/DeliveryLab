@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Delivery Lab" Height="600" MinHeight="480" Width="900" MinWidth="640" Background="#FFEFEFF4" WindowStyle="ThreeDBorderWindow">
+        Title="Delivery Lab" Height="650" MinHeight="480" Width="1000" MinWidth="640" Background="#FFEFEFF4" WindowStyle="ThreeDBorderWindow">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Height" Value="45"/>
@@ -13,9 +13,11 @@
             <Setter Property="Foreground" Value="#FF007AFF"/>
             <Setter Property="FontSize" Value="16"/>
         </Style>
+
         <Style TargetType="Rectangle">
             <Setter Property="Fill" Value="#FFA7A7AB"/>
         </Style>
+
         <Style TargetType="DataGridColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="TextBlock.FontWeight" Value="SemiBold"/>
@@ -23,14 +25,49 @@
             <Setter Property="BorderThickness" Value="0,0,1,1"/>
             <Setter Property="BorderBrush" Value="#FFC8C7CC"/>
         </Style>
-        <Style TargetType="{x:Type DataGridCell}">
+
+        <Style TargetType="DataGridCell">
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                    <ControlTemplate TargetType="DataGridCell">
                         <Grid Background="{TemplateBinding Background}">
                             <ContentPresenter VerticalAlignment="Center" />
                         </Grid>
                     </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ratingCell" TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
+            <EventSetter Event="MouseUp" Handler="UpdateRatingButtonClick"/>
+        </Style>
+
+        <Style x:Key="checkCell" TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
+            <EventSetter Event="MouseUp" Handler="CheckButtonClick"/>
+        </Style>
+
+        <Style x:Key="addCell" TargetType="DataGridCell">
+            <EventSetter Event="MouseUp" Handler="AddButtonClick"/>
+            <Setter Property="Background">
+                <Setter.Value>
+                    <VisualBrush Stretch="None">
+                        <VisualBrush.Visual>
+                            <TextBlock Text="+" FontSize="20" Foreground="#FF007AFF"/>
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="removeCell" TargetType="DataGridCell">
+            <EventSetter Event="MouseLeftButtonUp" Handler="RemoveButtonClick"/>
+            <Setter Property="Background">
+                <Setter.Value>
+                    <VisualBrush Stretch="None">
+                        <VisualBrush.Visual>
+                            <TextBlock Text="-" FontSize="20" Foreground="#FF007AFF"/>
+                        </VisualBrush.Visual>
+                    </VisualBrush>
                 </Setter.Value>
             </Setter>
         </Style>
@@ -58,6 +95,7 @@
                 <MenuItem Header="Загрузить пользователей из файла" Click="LoadUsersButtonClick"/>
                 <MenuItem Header="Загрузить рестораны из файла" Click="LoadRestsButtonClick"/>
                 <MenuItem Header="Сохранить всё в файлы" Click="SaveAllButtonClick"/>
+                <MenuItem Header="Экспортировать в книгу Excel" Click="ExportToExcelButtonClick"/>
                 <Separator/>
                 <MenuItem Header="Очистить заказы" Click="ClearAllOrdersButtonClick" Foreground="#FFFF3B30"/>
             </MenuItem>
@@ -68,7 +106,7 @@
                 <MenuItem Header="Удалить ресторан" Click="DeleteRestaurantButtonClick" Foreground="#FFFF3B30"/>
             </MenuItem>
             <MenuItem x:Name="settingsMenu" Header="Настройки" Visibility="Collapsed">
-                <MenuItem Header="Очистить заказ" Click="ClearOrderButtonClick"/>
+                <MenuItem x:Name="clearOrderButton" Header="Очистить заказ" Click="ClearOrderButtonClick" Visibility="Collapsed"/>
                 <MenuItem Header="Сменить пароль" Click="ChangePasswordButtonClick"/>
                 <Separator/>
                 <MenuItem Header="Удалить аккаунт" Click="DeleteAccountButtonClick" Foreground="#FFFF3B30"/>
@@ -87,14 +125,7 @@
         <Button x:Name="showUsers" Content="Пользователи" Click="ShowUsers"  Visibility="Collapsed" Grid.Column="0" Grid.Row="4" Margin="2,143,2,0" VerticalAlignment="Top"/>
         <Button Content="Калькулятор" Click="OpenCalcButtonClick" Grid.Column="0" Grid.Row="4" Margin="2,0,2,2" VerticalAlignment="Bottom"/>
 
-        <DataGrid x:Name="table" MouseLeftButtonUp="TableLeftClick" Grid.Column="2" Grid.Row="4" Margin="2" IsReadOnly="True" AutoGenerateColumns="False" Block.TextAlignment="Center" SelectionMode="Single" SelectionUnit="FullRow" CanUserResizeRows="False" CanUserReorderColumns="False" HeadersVisibility="Column" AlternationCount="1" AlternatingRowBackground="#BFF6F6F7" MinRowHeight="44" RowHeight="44" HorizontalGridLinesBrush="#FFC8C7CC" FontSize="14" VerticalGridLinesBrush="#FFB9B9B9" BorderBrush="#FFC8C7CC" Background="White"  HorizontalScrollBarVisibility="Disabled">
-            <DataGrid.ContextMenu>
-                <ContextMenu>
-                    <MenuItem x:Name="addRowToOrder" Header="Заказать" Click="AddRowToOrderClick" Visibility="Collapsed"/>
-                    <MenuItem x:Name="deleteRowButton" Header="Удалить" Click="DeleteRowButtonClick" Visibility="Collapsed"/>
-                </ContextMenu>
-            </DataGrid.ContextMenu>
-        </DataGrid>
+        <DataGrid x:Name="table" Grid.Column="2" Grid.Row="4" Margin="2" IsReadOnly="True" AutoGenerateColumns="False" Block.TextAlignment="Center" SelectionMode="Single" SelectionUnit="FullRow" CanUserResizeRows="False" CanUserReorderColumns="False" HeadersVisibility="Column" AlternationCount="1" AlternatingRowBackground="#BFF6F6F7" MinRowHeight="44" RowHeight="44" HorizontalGridLinesBrush="#FFC8C7CC" FontSize="14" VerticalGridLinesBrush="#FFB9B9B9" BorderBrush="#FFC8C7CC" Background="White"  HorizontalScrollBarVisibility="Disabled"/>
 
         <Rectangle x:Name="horizLine1" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"/>
         <Rectangle x:Name="horizLine2" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3"/>
