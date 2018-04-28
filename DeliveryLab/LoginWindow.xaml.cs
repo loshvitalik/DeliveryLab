@@ -37,16 +37,10 @@ namespace DeliveryLab
 			}
 		}
 
-		private void CheckIfRegistered()
-		{
-		}
-
 		private void LoginKeyPress(object sender, KeyEventArgs e)
 		{
 			if (e.Key == Key.Return)
 				SessionManager.LogIn(loginBox.Text, passBox.Password);
-			else
-				CheckIfRegistered();
 		}
 
 		private void PassEnterKeyPress(object sender, KeyEventArgs e)
@@ -58,11 +52,6 @@ namespace DeliveryLab
 		private void LoginUserButtonClick(object sender, RoutedEventArgs e)
 		{
 			SessionManager.LogIn(loginBox.Text, passBox.Password);
-		}
-
-		private void LoginBoxLostFocus(object sender, RoutedEventArgs e)
-		{
-			CheckIfRegistered();
 		}
 
 		private void CloseWindow(object sender, RoutedEventArgs e)

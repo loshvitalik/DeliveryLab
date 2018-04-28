@@ -33,7 +33,7 @@
         </Grid.ColumnDefinitions>
 
         <Label Content="Логин" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center" FontSize="16" />
-        <TextBox x:Name="loginBox" KeyUp="LoginKeyPress" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Margin="4,0,4,0" Background="White" BorderBrush="#FFC8C7CC" FontSize="16" VerticalContentAlignment="Center" LostFocus="LoginBoxLostFocus" />
+        <TextBox x:Name="loginBox" KeyUp="LoginKeyPress" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Margin="4,0,4,0" Background="White" BorderBrush="#FFC8C7CC" FontSize="16" VerticalContentAlignment="Center"/>
 
         <Label Content="Пароль" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center" FontSize="16" />
         <PasswordBox x:Name="passBox" KeyUp="PassEnterKeyPress" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Margin="4,0,4,0" Background="White" BorderBrush="#FFC8C7CC" FontSize="16" VerticalContentAlignment="Center" />
