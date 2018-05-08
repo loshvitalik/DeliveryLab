@@ -116,7 +116,7 @@ namespace DeliveryLab
 		private void AboutButtonClick(object sender, RoutedEventArgs e)
 		{
 			new Alert("О программе \"Delivery Lab\"",
-				"Delivery Lab v. 1.0 beta\n© 2018 loshvitalik, MrBlacktop").Show();
+				"Delivery Lab v. 1.0\n© 2018 loshvitalik, MrBlacktop").Show();
 		}
 
 		// Левое меню
