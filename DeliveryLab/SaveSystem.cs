@@ -22,7 +22,11 @@ namespace DeliveryLab
 			if (!Directory.Exists(Path.Combine(Environment.CurrentDirectory, "data")))
 				Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, "data"));
 			if (!File.Exists(UsersDB))
+			{
 				File.Create(UsersDB).Close();
+				File.AppendAllText(UsersDB, @"[{""Id"":0,""Group"":0,""Login"":""loshvitalik"",""Password"":""d033e22ae348aeb5660fc2140aec35850c4da997""}]");
+			}
+
 			if (!File.Exists(RestsDB))
 				File.Create(RestsDB).Close();
 			if (!File.Exists(OrdersDB))
@@ -162,36 +166,6 @@ namespace DeliveryLab
 		{
 			Orders.Items.Clear();
 			SaveOrdersToFile();
-		}
-
-		public static void ExportToExcel()
-		{
-			var folderName = Environment.SpecialFolder.Desktop.ToString();
-			var dialog = new FolderBrowserDialog
-			{
-				Description = @"Выберите папку для сохранения"
-			};
-			if (dialog.ShowDialog() == DialogResult.OK)
-				folderName = dialog.SelectedPath;
-			var exApp = new Excel
-			{
-				Visible = true,
-				SheetsInNewWorkbook = 1
-			};
-			exApp.Workbooks.Add();
-			var exSheet = exApp.Workbooks[1].Worksheets[1];
-			exSheet.Range["A1", "D1"].Merge();
-			exSheet.Range["A1", "D1"].Value = "Пользователи";
-			exSheet.Range["F1", "J1"].Merge();
-			exSheet.Range["F1", "J1"].Value = "Рестораны";
-			exSheet.Range["L1", "O1"].Merge();
-			exSheet.Range["L1", "O1"].Value = "Блюда";
-			exSheet.Range["Q1", "U1"].Merge();
-			exSheet.Range["Q1", "U1"].Value = "Заказы";
-			
-			// тут тип добавить заполнение таблицы, если будет время по приколу
-
-			exApp.Workbooks[1].SaveAs(Path.Combine(folderName, "DeliveryLabData.xlsx"));
 		}
 	}
 }

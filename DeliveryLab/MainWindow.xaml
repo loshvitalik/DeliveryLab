@@ -95,7 +95,6 @@
                 <MenuItem Header="Загрузить пользователей из файла" Click="LoadUsersButtonClick"/>
                 <MenuItem Header="Загрузить рестораны из файла" Click="LoadRestsButtonClick"/>
                 <MenuItem Header="Сохранить всё в файлы" Click="SaveAllButtonClick"/>
-                <MenuItem Header="Экспортировать в книгу Excel" Click="ExportToExcelButtonClick"/>
                 <Separator/>
                 <MenuItem Header="Очистить заказы" Click="ClearAllOrdersButtonClick" Foreground="#FFFF3B30"/>
             </MenuItem>

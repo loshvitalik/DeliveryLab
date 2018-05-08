@@ -69,11 +69,6 @@ namespace DeliveryLab
 			SaveSystem.SaveAll();
 		}
 
-		private void ExportToExcelButtonClick(object sender, RoutedEventArgs e)
-		{
-			SaveSystem.ExportToExcel();
-		}
-
 		private void ClearAllOrdersButtonClick(object sender, RoutedEventArgs e)
 		{
 			SaveSystem.ClearOrders();
