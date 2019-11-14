@@ -22,7 +22,9 @@ namespace Test
                 Console.WriteLine(tableName);
             }
 
+            var authors = dataBase.GetTable("authors");
 
+			Console.WriteLine(authors.ToString());
             Thread.Sleep(1000000);
         }
     }

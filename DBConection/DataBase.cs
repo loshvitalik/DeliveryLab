@@ -7,7 +7,7 @@ namespace DBConection
 {
     public class DataBase
     {
-        private readonly string _connectionString = @"Data Source=localhost;Initial Catalog=udb_Аверьянов_Лощенко;User Id=sa; Password=qwerty12345";
+        private readonly string _connectionString = @"Data Source=localhost;Initial Catalog=udb_Аверьянов_Лощенко;User Id=sa; Password=1";
 
 
 
