@@ -22,7 +22,8 @@ namespace Test
                 Console.WriteLine(tableName);
             }
 
-            Thread.Sleep(1000);
+
+            Thread.Sleep(1000000);
         }
     }
 }

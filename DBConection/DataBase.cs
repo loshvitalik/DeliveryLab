@@ -39,9 +39,9 @@ namespace DBConection
         private IEnumerable<string> ParseTableNames(DataSet ds)
         {
             var names = new List<string>();
-            foreach (DataTable dataTable in ds.Tables)
+            foreach (DataRow dataRow in ds.Tables[0].Rows)
             {
-                names.Add(dataTable.TableName);
+                names.Add(dataRow[2].ToString());
             }
 
             return names;
