@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8889C1F9-5F1F-47B1-B5C6-8125710D8D3D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeliveryLab", "DeliveryLab\DeliveryLab.csproj", "{CD427D4D-5BD3-4EEF-8E70-A1EE3BB14D0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBConnection", "DBConection\DBConnection.csproj", "{4A3054D0-6E94-4360-8E1F-0DED294C11AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{D4F81183-DF6A-42AD-AEA9-7CC4BB025AA9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,8 +21,19 @@ Global
 		{CD427D4D-5BD3-4EEF-8E70-A1EE3BB14D0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD427D4D-5BD3-4EEF-8E70-A1EE3BB14D0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD427D4D-5BD3-4EEF-8E70-A1EE3BB14D0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A3054D0-6E94-4360-8E1F-0DED294C11AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A3054D0-6E94-4360-8E1F-0DED294C11AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A3054D0-6E94-4360-8E1F-0DED294C11AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A3054D0-6E94-4360-8E1F-0DED294C11AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4F81183-DF6A-42AD-AEA9-7CC4BB025AA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4F81183-DF6A-42AD-AEA9-7CC4BB025AA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4F81183-DF6A-42AD-AEA9-7CC4BB025AA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4F81183-DF6A-42AD-AEA9-7CC4BB025AA9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4ACDC12B-2806-46E2-88F3-5C6A1E322E75}
 	EndGlobalSection
 EndGlobal
