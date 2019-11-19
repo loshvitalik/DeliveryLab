@@ -83,8 +83,8 @@ namespace DeliveryLab
 		private void DataGridTextEdited(object sender, DataGridCellEditEndingEventArgs e)
 		{
 			var name = title.Content.ToString();
-			var id = ((DataRowView) table.SelectedItem).Row.ItemArray[0];
-			var column = e.Column.Header;
+			var id = ((DataRowView) table.SelectedItem).Row.ItemArray[0].ToString();
+			var column = e.Column.Header.ToString();
 			var data = ((TextBox) e.EditingElement).Text;
 			dataBase.UpdateItem(name, id, column, data);
 		}
@@ -92,10 +92,10 @@ namespace DeliveryLab
 		private void CheckButtonClick(object sender, MouseButtonEventArgs e)
 		{
 			var name = title.Content.ToString();
-			var id = ((DataRowView)table.SelectedItem).Row.ItemArray[0];
-			var column = table.CurrentCell.Column.Header;
+			var id = ((DataRowView)table.SelectedItem).Row.ItemArray[0].ToString();
+			var column = table.CurrentCell.Column.Header.ToString();
 			var index = table.CurrentCell.Column.DisplayIndex;
-			var data = ((DataRowView)table.SelectedItem).Row.ItemArray[index];
+			var data = ((DataRowView)table.SelectedItem).Row.ItemArray[index].ToString();
 			dataBase.UpdateItem(name, id, column, data);
 		}
 
