@@ -57,6 +57,12 @@ namespace DeliveryLab
 					});
 				}
 			}
+			table.Columns.Add(new DataGridTextColumn
+			{
+				Header = "remove",
+				Width = new DataGridLength(columnWidth, DataGridLengthUnitType.Star),
+				CellStyle = FindResource("removeCell") as Style
+			});
 		}
 
 		// метод соединения с БД
@@ -74,14 +80,13 @@ namespace DeliveryLab
 				"Database Lab v. 2.0\n© 2019 loshvitalik, MrBlacktop").Show();
 		}
 
-		private void TextEditHandler(object sender, DataGridCellEditEndingEventArgs e)
+		private void DataGridTextEdited(object sender, DataGridCellEditEndingEventArgs e)
 		{
 			var name = title.Content.ToString();
 			var id = ((DataRowView) table.SelectedItem).Row.ItemArray[0];
-			var column = table.CurrentCell.Column.Header;
+			var column = e.Column.Header;
 			var data = ((TextBox) e.EditingElement).Text;
-			//dataBase.UpdateItem(name, id, column, data);
-
+			dataBase.UpdateItem(name, id, column, data);
 		}
 
 		private void CheckButtonClick(object sender, MouseButtonEventArgs e)
@@ -89,19 +94,22 @@ namespace DeliveryLab
 			var name = title.Content.ToString();
 			var id = ((DataRowView)table.SelectedItem).Row.ItemArray[0];
 			var column = table.CurrentCell.Column.Header;
-			//dataBase.UpdateItem(name, id, column, data);
+			var index = table.CurrentCell.Column.DisplayIndex;
+			var data = ((DataRowView)table.SelectedItem).Row.ItemArray[index];
+			dataBase.UpdateItem(name, id, column, data);
 		}
 
 		private void AddButtonClick(object sender, MouseButtonEventArgs e)
 		{
-			
+			//dataBase.AddItem(name, id);
+			table.Items.Refresh();
 		}
 
 		private void RemoveButtonClick(object sender, MouseButtonEventArgs e)
 		{
 			var name = title.Content.ToString();
-			var id = ((DataRowView)table.SelectedItem).Row.ItemArray[0];
-			//dataBase.DeleteItem(name, id);
+			var id = ((DataRowView)table.SelectedItem).Row.ItemArray[0].ToString();
+			dataBase.DeleteItem(name, id);
 			table.Items.Refresh();
 		}
 	}

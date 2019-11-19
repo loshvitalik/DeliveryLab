@@ -94,7 +94,7 @@
         <Button x:Name="connectButton" Click="ConnectButtonClick" Content="Подключиться" Grid.Column="0" Grid.Row="2" Background="#FFF6F6F7" BorderBrush="{x:Null}" Foreground="#FFFF3B30" FontWeight="SemiBold" FontSize="17"/>
         <ListBox x:Name="tableList" Grid.Row="3" Grid.Column="0" FontSize="17" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" SelectionChanged="ShowTable" Grid.RowSpan="2"/>
 
-        <DataGrid x:Name="table" CellEditEnding="TextEditHandler" Grid.Column="2" Grid.Row="4" Margin="2" AutoGenerateColumns="False" Block.TextAlignment="Center" CanUserResizeRows="False" CanUserReorderColumns="False" HeadersVisibility="Column" AlternationCount="1" AlternatingRowBackground="#BFF6F6F7" MinRowHeight="44" RowHeight="44" HorizontalGridLinesBrush="#FFC8C7CC" FontSize="14" VerticalGridLinesBrush="#FFB9B9B9" BorderBrush="#FFC8C7CC" Background="White"/>
+        <DataGrid x:Name="table" CellEditEnding="DataGridTextEdited" Grid.Column="2" Grid.Row="4" Margin="2" AutoGenerateColumns="False" Block.TextAlignment="Center" CanUserResizeRows="False" CanUserReorderColumns="False" HeadersVisibility="Column" AlternationCount="1" AlternatingRowBackground="#BFF6F6F7" MinRowHeight="44" RowHeight="44" HorizontalGridLinesBrush="#FFC8C7CC" FontSize="14" VerticalGridLinesBrush="#FFB9B9B9" BorderBrush="#FFC8C7CC" Background="White"/>
 
         <Rectangle x:Name="horizLine1" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"/>
         <Rectangle x:Name="horizLine2" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3"/>

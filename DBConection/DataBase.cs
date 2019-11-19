@@ -51,5 +51,20 @@ namespace DBConection
 
             return names;
         }
+
+        public void AddItem(string name, string id)
+        {
+	        throw new System.NotImplementedException();
+        }
+
+        public void DeleteItem(string name, string id)
+        {
+	        throw new System.NotImplementedException();
+        }
+
+        public void UpdateItem(string name, string id, string column, string data)
+        {
+	        throw new System.NotImplementedException();
+        }
     }
 }
