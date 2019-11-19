@@ -37,6 +37,36 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="checkCell" TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
+            <EventSetter Event="MouseUp" Handler="CheckButtonClick"/>
+        </Style>
+
+        <Style x:Key="addCell" TargetType="DataGridCell">
+            <EventSetter Event="MouseUp" Handler="AddButtonClick"/>
+            <Setter Property="Background">
+                <Setter.Value>
+                    <VisualBrush Stretch="None">
+                        <VisualBrush.Visual>
+                            <TextBlock Text="+" FontSize="20" Foreground="#FF007AFF"/>
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="removeCell" TargetType="DataGridCell">
+            <EventSetter Event="MouseLeftButtonUp" Handler="RemoveButtonClick"/>
+            <Setter Property="Background">
+                <Setter.Value>
+                    <VisualBrush Stretch="None">
+                        <VisualBrush.Visual>
+                            <TextBlock Text="-" FontSize="20" Foreground="#FF007AFF"/>
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <Grid>
