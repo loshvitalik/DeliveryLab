@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading;
@@ -28,7 +29,8 @@ namespace DeliveryLab
 			var tableName = tableList.SelectedItem.ToString(); // имя активной таблицы берётся из элемента ListBox
 			var data = dataBase.GetTable(tableName); // вызывается метод получения данных нужной таблицы
 			table.DataContext = data;
-			table.ItemsSource = data.Tables[0].DefaultView; // устанавливаются контекст и источник данных для элемента DataGrid
+			table.ItemsSource =
+				data.Tables[0].DefaultView; // устанавливаются контекст и источник данных для элемента DataGrid
 			title.Content = tableName; // заголовок окна меняется на название выбранной таблицы
 			var columns = data.Tables[0].Columns; // из класса DataSet выделяется коллекция столбцов таблицы
 			var columnWidth = 100.0 / columns.Count; // все столбцы получают одинаковую равную ширину
@@ -57,6 +59,7 @@ namespace DeliveryLab
 					});
 				}
 			}
+
 			table.Columns.Add(new DataGridTextColumn
 			{
 				Header = "remove",
@@ -77,27 +80,24 @@ namespace DeliveryLab
 		private void DataGridTextEdited(object sender, DataGridCellEditEndingEventArgs e)
 		{
 			var name = title.Content.ToString();
-			var id = ((DataRowView)table.SelectedItem).Row.ItemArray[0].ToString();
 			var column = e.Column.Header.ToString();
-			var data = ((TextBox)e.EditingElement).Text;
-			dataBase.UpdateItem(name, id, column, data);
+			var data = ((TextBox) e.EditingElement).Text;
+			dataBase.UpdateItem(name, GetItemId(), column, data);
 		}
 
 		private void CheckButtonClick(object sender, MouseButtonEventArgs e)
 		{
 			var name = title.Content.ToString();
-			var id = ((DataRowView)table.SelectedItem).Row.ItemArray[0].ToString();
 			var column = table.CurrentCell.Column.Header.ToString();
 			var index = table.CurrentCell.Column.DisplayIndex;
-			var data = ((DataRowView)table.SelectedItem).Row.ItemArray[index].ToString();
-			dataBase.UpdateItem(name, id, column, data);
+			var data = ((DataRowView) table.SelectedItem).Row.ItemArray[index].ToString();
+			dataBase.UpdateItem(name, GetItemId(), column, data);
 		}
 
 		private void RemoveButtonClick(object sender, MouseButtonEventArgs e)
 		{
 			var name = title.Content.ToString();
-			var id = ((DataRowView)table.SelectedItem).Row.ItemArray[0].ToString();
-			dataBase.DeleteItem(name, id);
+			dataBase.DeleteItem(name, GetItemId());
 			table.Items.Refresh();
 		}
 
@@ -113,6 +113,12 @@ namespace DeliveryLab
 			var name = title.Content.ToString();
 			dataBase.AddItem(name, ids);
 			table.Items.Refresh();
+		}
+
+		private string[] GetItemId()
+		{
+			var id = ((DataRowView) table.SelectedItem).Row.ItemArray[0].ToString();
+			return title.Content.ToString() == "title_author" ? new[] {id, ((DataRowView) table.SelectedItem).Row.ItemArray[1].ToString()} : new[] {id};
 		}
 
 		private void AboutButtonClick(object sender, RoutedEventArgs e)
