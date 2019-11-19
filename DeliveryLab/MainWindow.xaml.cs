@@ -74,18 +74,12 @@ namespace DeliveryLab
 			connectButton.Content = "udb__Аверьянов__Лощенко"; // заголовок окна меняется на название базы данных
 		}
 
-		private void AboutButtonClick(object sender, RoutedEventArgs e)
-		{
-			new Alert("О программе \"Database Lab\"",
-				"Database Lab v. 2.0\n© 2019 loshvitalik, MrBlacktop").Show();
-		}
-
 		private void DataGridTextEdited(object sender, DataGridCellEditEndingEventArgs e)
 		{
 			var name = title.Content.ToString();
-			var id = ((DataRowView) table.SelectedItem).Row.ItemArray[0].ToString();
+			var id = ((DataRowView)table.SelectedItem).Row.ItemArray[0].ToString();
 			var column = e.Column.Header.ToString();
-			var data = ((TextBox) e.EditingElement).Text;
+			var data = ((TextBox)e.EditingElement).Text;
 			dataBase.UpdateItem(name, id, column, data);
 		}
 
@@ -99,18 +93,32 @@ namespace DeliveryLab
 			dataBase.UpdateItem(name, id, column, data);
 		}
 
-		private void AddButtonClick(object sender, MouseButtonEventArgs e)
-		{
-			//dataBase.AddItem(name, id);
-			table.Items.Refresh();
-		}
-
 		private void RemoveButtonClick(object sender, MouseButtonEventArgs e)
 		{
 			var name = title.Content.ToString();
 			var id = ((DataRowView)table.SelectedItem).Row.ItemArray[0].ToString();
 			dataBase.DeleteItem(name, id);
 			table.Items.Refresh();
+		}
+
+		private void AddButtonClick(object sender, RoutedEventArgs e)
+		{
+			if (title.Content == null) return;
+			new AddItemWindow().Show();
+			table.Items.Refresh();
+		}
+
+		public void AddItem(string[] ids)
+		{
+			var name = title.Content.ToString();
+			dataBase.AddItem(name, ids);
+			table.Items.Refresh();
+		}
+
+		private void AboutButtonClick(object sender, RoutedEventArgs e)
+		{
+			new Alert("О программе \"Database Lab\"",
+				"Database Lab v. 2.2\n© 2019 loshvitalik, MrBlacktop").Show();
 		}
 	}
 }

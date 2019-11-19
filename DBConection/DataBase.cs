@@ -52,7 +52,7 @@ namespace DBConection
             return names;
         }
 
-        public void AddItem(string name, string id)
+        public void AddItem(string name, string[] ids)
         {
 	        throw new System.NotImplementedException();
         }

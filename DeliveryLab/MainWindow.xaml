@@ -42,19 +42,6 @@
             <EventSetter Event="MouseUp" Handler="CheckButtonClick"/>
         </Style>
 
-        <Style x:Key="addCell" TargetType="DataGridCell">
-            <EventSetter Event="MouseUp" Handler="AddButtonClick"/>
-            <Setter Property="Background">
-                <Setter.Value>
-                    <VisualBrush Stretch="None">
-                        <VisualBrush.Visual>
-                            <TextBlock Text="+" FontSize="20" Foreground="#FF007AFF"/>
-                        </VisualBrush.Visual>
-                    </VisualBrush>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
         <Style x:Key="removeCell" TargetType="DataGridCell">
             <EventSetter Event="MouseLeftButtonUp" Handler="RemoveButtonClick"/>
             <Setter Property="Background">
@@ -85,6 +72,7 @@
         </Grid.ColumnDefinitions>
 
         <Menu Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Padding="2" Width="auto" VerticalAlignment="Center" Background="#FFEFEFF4" FontSize="14">
+            <MenuItem Header="Добавить..." Click="AddButtonClick"/>
             <MenuItem Header="Справка">
                 <MenuItem Header="О программе" Click="AboutButtonClick" />
             </MenuItem>
