@@ -5,6 +5,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using DBConection;
 
 namespace DeliveryLab
@@ -42,7 +43,8 @@ namespace DeliveryLab
 					{
 						Header = column.ColumnName,
 						Binding = new Binding(column.ColumnName),
-						Width = new DataGridLength(columnWidth, DataGridLengthUnitType.Star)
+						Width = new DataGridLength(columnWidth, DataGridLengthUnitType.Star),
+						CellStyle = FindResource("checkCell") as Style
 					});
 				}
 				else // для всех остальных - TextColumn
@@ -72,21 +74,35 @@ namespace DeliveryLab
 				"Database Lab v. 2.0\n© 2019 loshvitalik, MrBlacktop").Show();
 		}
 
-		private void Table_OnCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+		private void TextEditHandler(object sender, DataGridCellEditEndingEventArgs e)
+		{
+			var name = title.Content.ToString();
+			var id = ((DataRowView) table.SelectedItem).Row.ItemArray[0];
+			var column = table.CurrentCell.Column.Header;
+			var data = ((TextBox) e.EditingElement).Text;
+			//dataBase.UpdateItem(name, id, column, data);
+
+		}
+
+		private void CheckButtonClick(object sender, MouseButtonEventArgs e)
 		{
 			var name = title.Content.ToString();
 			var id = ((DataRowView)table.SelectedItem).Row.ItemArray[0];
 			var column = table.CurrentCell.Column.Header;
-			var data = ((TextBox)e.EditingElement).Text;
 			//dataBase.UpdateItem(name, id, column, data);
 		}
 
-		private void Table_OnCurrentCellChanged(object sender, EventArgs e)
+		private void AddButtonClick(object sender, MouseButtonEventArgs e)
+		{
+			
+		}
+
+		private void RemoveButtonClick(object sender, MouseButtonEventArgs e)
 		{
 			var name = title.Content.ToString();
 			var id = ((DataRowView)table.SelectedItem).Row.ItemArray[0];
-			var column = table.CurrentCell.Column.Header;
-			//var data = ((TextBox)e.EditingElement).Text;
+			//dataBase.DeleteItem(name, id);
+			table.Items.Refresh();
 		}
 	}
 }
