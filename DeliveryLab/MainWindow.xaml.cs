@@ -5,9 +5,12 @@ using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
+using System.Windows.Forms;
 using System.Windows.Input;
 using DBConection;
+using Binding = System.Windows.Data.Binding;
+using DataGrid = System.Windows.Controls.DataGrid;
+using TextBox = System.Windows.Controls.TextBox;
 
 namespace DeliveryLab
 {
@@ -83,7 +86,10 @@ namespace DeliveryLab
 			var name = title.Content.ToString();
 			var column = e.Column.Header.ToString();
 			var data = ((TextBox) e.EditingElement).Text;
-			dataBase.Update(ds);
+			var index = ((DataGrid)sender).ItemContainerGenerator.IndexFromContainer(e.Row);
+			var dgrow = table.ItemContainerGenerator.ContainerFromIndex(index) as DataGridRow;
+			var row = (((DataRowView)table.SelectedItem).Row);
+			dataBase.Update(row, index);
 			//dataBase.UpdateItem(name, GetItemId(), column, data);
 		}
 
@@ -98,23 +104,21 @@ namespace DeliveryLab
 
 		private void RemoveButtonClick(object sender, MouseButtonEventArgs e)
 		{
-			var name = title.Content.ToString();
-			//dataBase.DeleteItem(name, GetItemId());
-			table.Items.Refresh();
+				var index = table.Items.IndexOf(table.CurrentItem);
+				dataBase.DeleteRow(index);
 		}
 
 		private void AddButtonClick(object sender, RoutedEventArgs e)
 		{
 			if (title.Content == null) return;
-			new AddItemWindow().Show();
-			table.Items.Refresh();
+			DataRow row = ds.Tables[0].NewRow();
+			dataBase.AddRow(row);
 		}
 
 		public void AddItem(string[] ids)
 		{
 			var name = title.Content.ToString();
 			//dataBase.AddItem(name, ids);
-			table.Items.Refresh();
 		}
 
 		private string[] GetItemId()
