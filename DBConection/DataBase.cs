@@ -7,9 +7,8 @@ namespace DBConection
     public class DataBase
     {
 		// строка подключения к БД
-        private readonly string _connectionString = @"Data Source=localhost;Initial Catalog=udb_Аверьянов_Лощенко;User Id=sa; Password=1";
-        private SqlDataAdapter _adapter;
-        private DataSet _ds;
+        private readonly string _connectionString = @"Data Source=localhost;Initial Catalog=udb_Аверьянов_Лощенко;User Id=sa; Password=qwerty12345";
+        private string _sql;
 
 
 	    // метод получения данных из таблицы по её названию
@@ -23,8 +22,7 @@ namespace DBConection
                 var ds = new DataSet(); 
                 adapter.Fill(ds); // данные таблицы помещаются в класс DataSet и возвращаются
 
-                _adapter = adapter;
-                _ds = ds;
+                _sql = sql;
                 return ds;
             }
         }
@@ -61,8 +59,19 @@ namespace DBConection
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                DeleteRow(index);
-                AddRow(row);
+                var adapter = new SqlDataAdapter(_sql, connection);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                var itemArray = ds.Tables[0].Rows[index].ItemArray;
+                var newRow = row.ItemArray;
+                for (int i = 0; i < itemArray.Length; i++)
+                {
+                    itemArray[i] = newRow[i];
+                }
+
+                var sqlCommandBuilder = new SqlCommandBuilder(adapter);
+                adapter.Update(ds);
             }
         }
 
@@ -70,9 +79,12 @@ namespace DBConection
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                _ds.Tables[0].Rows.RemoveAt(index);
-               var sqlCommandBuilder = new SqlCommandBuilder(_adapter);
-                _adapter.Update(_ds);
+                var adapter = new SqlDataAdapter(_sql, connection);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+                ds.Tables[0].Rows[index].Delete();
+                var sqlCommandBuilder = new SqlCommandBuilder(adapter);
+                adapter.Update(ds);
             }
         }
 
@@ -80,9 +92,13 @@ namespace DBConection
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                _ds.Tables[0].Rows.Add(row);
-                var sqlCommandBuilder = new SqlCommandBuilder(_adapter);
-                _adapter.Update(_ds);
+                var adapter = new SqlDataAdapter(_sql, connection);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+                var dataRow = ds.Tables[0].NewRow();
+                ds.Tables[0].Rows.Add(dataRow);
+                var sqlCommandBuilder = new SqlCommandBuilder(adapter);
+                adapter.Update(ds);
             }
         }
     }
