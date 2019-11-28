@@ -7,7 +7,7 @@ namespace DBConection
     public class DataBase
     {
 		// строка подключения к БД
-        private readonly string _connectionString = @"Data Source=localhost;Initial Catalog=udb_Аверьянов_Лощенко;User Id=sa; Password=qwerty12345";
+        private readonly string _connectionString = @"Data Source=localhost;Initial Catalog=udb_Аверьянов_Лощенко;User Id=sa; Password=1";
         private string _sql;
 
 
@@ -70,7 +70,7 @@ namespace DBConection
                     itemArray[i] = newRow[i];
                 }
 
-                var sqlCommandBuilder = new SqlCommandBuilder(adapter);
+                ds.Tables[0].Rows[index].ItemArray = itemArray;
                 adapter.Update(ds);
             }
         }
@@ -83,7 +83,6 @@ namespace DBConection
                 var ds = new DataSet();
                 adapter.Fill(ds);
                 ds.Tables[0].Rows[index].Delete();
-                var sqlCommandBuilder = new SqlCommandBuilder(adapter);
                 adapter.Update(ds);
             }
         }
@@ -97,7 +96,6 @@ namespace DBConection
                 adapter.Fill(ds);
                 var dataRow = ds.Tables[0].NewRow();
                 ds.Tables[0].Rows.Add(dataRow);
-                var sqlCommandBuilder = new SqlCommandBuilder(adapter);
                 adapter.Update(ds);
             }
         }

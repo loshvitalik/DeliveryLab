@@ -7,7 +7,7 @@ namespace DeliveryLab
 	/// <summary>
 	/// Логика взаимодействия для AddItemWindow.xaml
 	/// </summary>
-	public partial class AddItemWindow : Window
+	public partial class AddItemWindow
 	{
 		public AddItemWindow()
 		{

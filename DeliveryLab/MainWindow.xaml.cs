@@ -83,29 +83,28 @@ namespace DeliveryLab
 
 		private void DataGridTextEdited(object sender, DataGridCellEditEndingEventArgs e)
 		{
-			var name = title.Content.ToString();
-			var column = e.Column.Header.ToString();
 			var data = ((TextBox) e.EditingElement).Text;
-			var index = ((DataGrid)sender).ItemContainerGenerator.IndexFromContainer(e.Row);
-			var dgrow = table.ItemContainerGenerator.ContainerFromIndex(index) as DataGridRow;
-			var row = (((DataRowView)table.SelectedItem).Row);
+			var index = ((DataGrid) sender).ItemContainerGenerator.IndexFromContainer(e.Row);
+			var row = (((DataRowView) table.SelectedItem).Row);
+			var columnIndex = e.Column.DisplayIndex;
+			row[columnIndex] = data;
 			dataBase.Update(row, index);
-			//dataBase.UpdateItem(name, GetItemId(), column, data);
 		}
 
 		private void CheckButtonClick(object sender, MouseButtonEventArgs e)
 		{
-			var name = title.Content.ToString();
-			var column = table.CurrentCell.Column.Header.ToString();
-			var index = table.CurrentCell.Column.DisplayIndex;
-			var data = ((DataRowView) table.SelectedItem).Row.ItemArray[index].ToString();
-			//dataBase.UpdateItem(name, GetItemId(), column, data);
+			var columnIndex = table.CurrentCell.Column.DisplayIndex;
+			var data = ((DataRowView) table.SelectedItem).Row.ItemArray[columnIndex].ToString();
+			var index = table.Items.IndexOf(table.CurrentItem);
+			var row = ((DataRowView) table.SelectedItem).Row;
+			row[columnIndex] = data;
+			dataBase.Update(row, index);
 		}
 
 		private void RemoveButtonClick(object sender, MouseButtonEventArgs e)
 		{
-				var index = table.Items.IndexOf(table.CurrentItem);
-				dataBase.DeleteRow(index);
+			var index = table.Items.IndexOf(table.CurrentItem);
+			dataBase.DeleteRow(index);
 		}
 
 		private void AddButtonClick(object sender, RoutedEventArgs e)
@@ -118,19 +117,12 @@ namespace DeliveryLab
 		public void AddItem(string[] ids)
 		{
 			var name = title.Content.ToString();
-			//dataBase.AddItem(name, ids);
-		}
-
-		private string[] GetItemId()
-		{
-			var id = ((DataRowView) table.SelectedItem).Row.ItemArray[0].ToString();
-			return title.Content.ToString() == "title_author" ? new[] {id, ((DataRowView) table.SelectedItem).Row.ItemArray[1].ToString()} : new[] {id};
 		}
 
 		private void AboutButtonClick(object sender, RoutedEventArgs e)
 		{
 			new Alert("О программе \"Database Lab\"",
-				"Database Lab v. 2.2\n© 2019 loshvitalik, MrBlacktop").Show();
+				"Database Lab v. 2.3\n© 2019 loshvitalik, MrBlacktop").Show();
 		}
 	}
 }
