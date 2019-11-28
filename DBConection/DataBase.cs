@@ -9,10 +9,9 @@ namespace DBConection
 		// строка подключения к БД
         private readonly string _connectionString = @"Data Source=localhost;Initial Catalog=udb_Аверьянов_Лощенко;User Id=sa; Password=1";
         private SqlDataAdapter _adapter;
-        private DataSet _ds;
 
 
-	    // метод получения данных из таблицы по её названию
+        // метод получения данных из таблицы по её названию
         public DataSet GetTable(string tableName)
         {
 			// запрос данных выполняется с использованием подключения с заданной строкой
@@ -22,6 +21,8 @@ namespace DBConection
                 var adapter = new SqlDataAdapter(sql,connection);
                 var ds = new DataSet(); 
                 adapter.Fill(ds); // данные таблицы помещаются в класс DataSet и возвращаются
+
+                _adapter = adapter;
                 return ds;
             }
         }
@@ -54,12 +55,12 @@ namespace DBConection
             return names;
         }
 
-        public void Update()
+        public void Update(DataSet ds)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 var sqlCommandBuilder = new SqlCommandBuilder(_adapter);
-                _adapter.Update(_ds);
+                _adapter.Update(ds);
             }
         }
     }
