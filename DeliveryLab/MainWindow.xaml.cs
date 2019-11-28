@@ -110,8 +110,9 @@ namespace DeliveryLab
 		private void AddButtonClick(object sender, RoutedEventArgs e)
 		{
 			if (title.Content == null) return;
-			DataRow row = ds.Tables[0].NewRow();
-			dataBase.AddRow(row);
+			var row = ds.Tables[0].Rows[0];
+			new AddItemWindow(dataBase, row, table.Columns).Show();
+			table.Items.Refresh();
 		}
 
 		public void AddItem(string[] ids)

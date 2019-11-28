@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         FocusManager.FocusedElement="{Binding ElementName=textBox}"
-        Title="Добавить элемент" Height="210" Width="370" WindowStartupLocation="CenterOwner" Background="#FFEFEFF4" ResizeMode="NoResize" Topmost="True" WindowStyle="ThreeDBorderWindow">
+        Title="Добавить элемент" Height="1000" Width="370" WindowStartupLocation="CenterOwner" Background="#FFEFEFF4" Topmost="True" WindowStyle="ThreeDBorderWindow">
 
     <Window.Resources>
         <Style TargetType="Button">
@@ -19,16 +19,49 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50*" />
-            <RowDefinition Height="50*" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="30" />
             <RowDefinition Height="50" />
             <RowDefinition Height="45" />
         </Grid.RowDefinitions>
 
-        <Label x:Name="label" Content="Введите ID нового элемента" Grid.Row="0" FontSize="16" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Center" />
-        <TextBox x:Name="textBox" KeyDown="EnterKeyPress" Grid.Row="1" Margin="4" Background="White" BorderBrush="#FFC8C7CC" FontSize="16" VerticalContentAlignment="Center" />
-        <Label x:Name="note" Grid.Row="2" FontSize="14" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Center">
-            <TextBlock>При добавлении элемента с несколькими ключами<LineBreak/>они записываются через точку с запятой ';'</TextBlock></Label>
-        <Button x:Name="addButton" Content="Добавить" Click="AddButtonClick" Grid.Row="3" Margin="2" />
+        <Label x:Name="label0" Grid.Row="0" FontSize="16" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Center" />
+        <TextBox x:Name="textBox0" KeyDown="EnterKeyPress" Grid.Row="1" Margin="4" Background="White" BorderBrush="#FFC8C7CC" FontSize="16" VerticalContentAlignment="Center" />
+        <Label x:Name="label1" Grid.Row="2" FontSize="16" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Center" />
+        <TextBox x:Name="textBox1" KeyDown="EnterKeyPress" Grid.Row="3" Margin="4" Background="White" BorderBrush="#FFC8C7CC" FontSize="16" VerticalContentAlignment="Center" />
+        <Label x:Name="label2" Grid.Row="4" FontSize="16" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Center" />
+        <TextBox x:Name="textBox2" KeyDown="EnterKeyPress" Grid.Row="5" Margin="4" Background="White" BorderBrush="#FFC8C7CC" FontSize="16" VerticalContentAlignment="Center" />
+        <Label x:Name="label3" Grid.Row="6" FontSize="16" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Center" />
+        <TextBox x:Name="textBox3" KeyDown="EnterKeyPress" Grid.Row="7" Margin="4" Background="White" BorderBrush="#FFC8C7CC" FontSize="16" VerticalContentAlignment="Center" />
+        <Label x:Name="label4" Grid.Row="8" FontSize="16" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Center" />
+        <TextBox x:Name="textBox4" KeyDown="EnterKeyPress" Grid.Row="9" Margin="4" Background="White" BorderBrush="#FFC8C7CC" Visibility="Collapsed" FontSize="16" VerticalContentAlignment="Center" />
+        <Label x:Name="label5" Grid.Row="10" FontSize="16" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Center" />
+        <TextBox x:Name="textBox5" KeyDown="EnterKeyPress" Grid.Row="11" Margin="4" Background="White" BorderBrush="#FFC8C7CC" Visibility="Collapsed" FontSize="16" VerticalContentAlignment="Center" />
+        <Label x:Name="label6" Grid.Row="12" FontSize="16" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Center" />
+        <TextBox x:Name="textBox6" KeyDown="EnterKeyPress" Grid.Row="13" Margin="4" Background="White" BorderBrush="#FFC8C7CC" Visibility="Collapsed" FontSize="16" VerticalContentAlignment="Center" />
+        <Label x:Name="label7" Grid.Row="14" FontSize="16" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Center" />
+        <TextBox x:Name="textBox7" KeyDown="EnterKeyPress" Grid.Row="15" Margin="4" Background="White" BorderBrush="#FFC8C7CC" Visibility="Collapsed" FontSize="16" VerticalContentAlignment="Center" />
+        <Label x:Name="label8" Grid.Row="16" FontSize="16" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Center" />
+        <TextBox x:Name="textBox8" KeyDown="EnterKeyPress" Grid.Row="17" Margin="4" Background="White" BorderBrush="#FFC8C7CC" Visibility="Collapsed" FontSize="16" VerticalContentAlignment="Center" />
+        <Label x:Name="label9" Grid.Row="18" FontSize="16" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" VerticalAlignment="Center" />
+        <TextBox x:Name="textBox9" KeyDown="EnterKeyPress" Grid.Row="19" Margin="4" Background="White" BorderBrush="#FFC8C7CC" Visibility="Collapsed" FontSize="16" VerticalContentAlignment="Center" />
+        <Button x:Name="addButton" Content="Добавить" Click="AddButtonClick" Grid.Row="20" Margin="2" />
     </Grid>
 </Window>
