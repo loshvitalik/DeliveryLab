@@ -17,6 +17,7 @@ namespace DeliveryLab
 	public partial class MainWindow
 	{
 		private static DataBase dataBase;
+		private static DataSet ds;
 
 		public MainWindow()
 		{
@@ -27,12 +28,12 @@ namespace DeliveryLab
 		private void ShowTable(object sender, SelectionChangedEventArgs e)
 		{
 			var tableName = tableList.SelectedItem.ToString(); // имя активной таблицы берётся из элемента ListBox
-			var data = dataBase.GetTable(tableName); // вызывается метод получения данных нужной таблицы
-			table.DataContext = data;
+			ds = dataBase.GetTable(tableName); // вызывается метод получения данных нужной таблицы
+			table.DataContext = ds;
 			table.ItemsSource =
-				data.Tables[0].DefaultView; // устанавливаются контекст и источник данных для элемента DataGrid
+				ds.Tables[0].DefaultView; // устанавливаются контекст и источник данных для элемента DataGrid
 			title.Content = tableName; // заголовок окна меняется на название выбранной таблицы
-			var columns = data.Tables[0].Columns; // из класса DataSet выделяется коллекция столбцов таблицы
+			var columns = ds.Tables[0].Columns; // из класса DataSet выделяется коллекция столбцов таблицы
 			var columnWidth = 100.0 / columns.Count; // все столбцы получают одинаковую равную ширину
 			table.Columns.Clear(); // элемент DataGrid очищается от предыдущих данных
 			// для каждого столбца из ранее полученного списка создаётся столбец в элементе DataGrid,
@@ -82,7 +83,8 @@ namespace DeliveryLab
 			var name = title.Content.ToString();
 			var column = e.Column.Header.ToString();
 			var data = ((TextBox) e.EditingElement).Text;
-			dataBase.UpdateItem(name, GetItemId(), column, data);
+			dataBase.Update(ds);
+			//dataBase.UpdateItem(name, GetItemId(), column, data);
 		}
 
 		private void CheckButtonClick(object sender, MouseButtonEventArgs e)
@@ -91,13 +93,13 @@ namespace DeliveryLab
 			var column = table.CurrentCell.Column.Header.ToString();
 			var index = table.CurrentCell.Column.DisplayIndex;
 			var data = ((DataRowView) table.SelectedItem).Row.ItemArray[index].ToString();
-			dataBase.UpdateItem(name, GetItemId(), column, data);
+			//dataBase.UpdateItem(name, GetItemId(), column, data);
 		}
 
 		private void RemoveButtonClick(object sender, MouseButtonEventArgs e)
 		{
 			var name = title.Content.ToString();
-			dataBase.DeleteItem(name, GetItemId());
+			//dataBase.DeleteItem(name, GetItemId());
 			table.Items.Refresh();
 		}
 
@@ -111,7 +113,7 @@ namespace DeliveryLab
 		public void AddItem(string[] ids)
 		{
 			var name = title.Content.ToString();
-			dataBase.AddItem(name, ids);
+			//dataBase.AddItem(name, ids);
 			table.Items.Refresh();
 		}
 
