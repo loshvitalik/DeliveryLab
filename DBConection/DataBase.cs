@@ -61,19 +61,17 @@ namespace DBConection
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                var dataRow = _ds.Tables[0].Rows[index];
-                dataRow = row;
-                var sqlCommandBuilder = new SqlCommandBuilder(_adapter);
-                _adapter.Update(_ds);
+                DeleteRow(index);
+                AddRow(row);
             }
         }
 
-        public void DeleteRow(DataRow row)
+        public void DeleteRow(int index)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-               _ds.Tables[0].Rows.Remove(row);
-                var sqlCommandBuilder = new SqlCommandBuilder(_adapter);
+                _ds.Tables[0].Rows.RemoveAt(index);
+               var sqlCommandBuilder = new SqlCommandBuilder(_adapter);
                 _adapter.Update(_ds);
             }
         }
