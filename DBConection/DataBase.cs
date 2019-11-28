@@ -8,6 +8,8 @@ namespace DBConection
     {
 		// строка подключения к БД
         private readonly string _connectionString = @"Data Source=localhost;Initial Catalog=udb_Аверьянов_Лощенко;User Id=sa; Password=1";
+        private SqlDataAdapter _adapter;
+        private DataSet _ds;
 
 
 	    // метод получения данных из таблицы по её названию
@@ -52,19 +54,13 @@ namespace DBConection
             return names;
         }
 
-        public void AddItem(string name, string[] id)
+        public void Update()
         {
-	        throw new System.NotImplementedException();
-        }
-
-        public void DeleteItem(string name, string[] id)
-        {
-	        throw new System.NotImplementedException();
-        }
-
-        public void UpdateItem(string name, string[] id, string column, string data)
-        {
-	        throw new System.NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                var sqlCommandBuilder = new SqlCommandBuilder(_adapter);
+                _adapter.Update(_ds);
+            }
         }
     }
 }
