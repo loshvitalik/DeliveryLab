@@ -55,26 +55,35 @@ namespace DBConection
             return names;
         }
 
+		// метод обновления данных
         public void Update(DataRow row, int index)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
+					
+				// создание подключение к БД
                 var adapter = new SqlDataAdapter(_sql, connection);
                 var ds = new DataSet();
                 adapter.Fill(ds);
 
+				// получение исходной строки таблицы
                 var itemArray = ds.Tables[0].Rows[index].ItemArray;
-                var newRow = row.ItemArray;
+				var newRow = row.ItemArray;
+				// замена новыми значениями
                 for (int i = 0; i < itemArray.Length; i++)
                 {
                     itemArray[i] = newRow[i];
                 }
 
+				// обновление таблицы в БД
                 ds.Tables[0].Rows[index].ItemArray = itemArray;
+				var a = new SqlCommandBuilder(adapter);
+
                 adapter.Update(ds);
             }
         }
 
+		// метод удаления данных
         public void DeleteRow(int index)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -82,11 +91,12 @@ namespace DBConection
                 var adapter = new SqlDataAdapter(_sql, connection);
                 var ds = new DataSet();
                 adapter.Fill(ds);
-                ds.Tables[0].Rows[index].Delete();
+                ds.Tables[0].Rows[index].Delete(); // удаление строки из БД по ее индексу
                 adapter.Update(ds);
             }
         }
 
+		// метод добавления данных
         public void AddRow(DataRow row)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -95,7 +105,7 @@ namespace DBConection
                 var ds = new DataSet();
                 adapter.Fill(ds);
                 var dataRow = ds.Tables[0].NewRow();
-                ds.Tables[0].Rows.Add(dataRow);
+                ds.Tables[0].Rows.Add(dataRow); // новая строка добавляется в БД и вызывается обновление
                 adapter.Update(ds);
             }
         }

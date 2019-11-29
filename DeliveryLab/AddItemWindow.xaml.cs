@@ -15,7 +15,7 @@ namespace DeliveryLab
 	/// </summary>
 	public partial class AddItemWindow
 	{
-		// 4-10
+
 		private DataBase dataBase;
 		private DataRow row;
 		private ObservableCollection<DataGridColumn> columns;
@@ -26,6 +26,7 @@ namespace DeliveryLab
 			this.dataBase = dataBase;
 			this.row = row;
 			this.columns = columns;
+			// на каждое поле в таблице создаётся заголовок и текстовое поле
 			label0.Content = columns[0].Header;
 			label1.Content = columns[1].Header;
 			label2.Content = columns[2].Header;
@@ -55,12 +56,14 @@ namespace DeliveryLab
 			}
 		}
 
+		// при нажатии клавиши Enter также происходит ввод информации
 		private void EnterKeyPress(object sender, KeyEventArgs e)
 		{
 			if (e.Key == Key.Enter)
 				AddButtonClick(null, null);
 		}
 
+		// Метод добавления информации в БД
 		private void AddButtonClick(object sender, RoutedEventArgs e)
 		{
 			var items = GetValues();
@@ -75,6 +78,7 @@ namespace DeliveryLab
 			dataBase.AddRow(row);
 		}
 
+		// метод, получающий значения из всех текстовых полей в форме
 		private string[] GetValues()
 		{
 			var values = new List<string> {textBox0.Text, textBox1.Text, textBox2.Text, textBox3.Text};

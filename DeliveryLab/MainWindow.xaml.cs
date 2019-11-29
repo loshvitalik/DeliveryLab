@@ -81,49 +81,48 @@ namespace DeliveryLab
 			connectButton.Content = "udb__Аверьянов__Лощенко"; // заголовок окна меняется на название базы данных
 		}
 
+		// метод обновления данных в БД при изменении текста
 		private void DataGridTextEdited(object sender, DataGridCellEditEndingEventArgs e)
 		{
-			var data = ((TextBox) e.EditingElement).Text;
-			var index = ((DataGrid) sender).ItemContainerGenerator.IndexFromContainer(e.Row);
-			var row = (((DataRowView) table.SelectedItem).Row);
+			var data = ((TextBox) e.EditingElement).Text; // получение текста из отредактированного элемента
+			var index = ((DataGrid) sender).ItemContainerGenerator.IndexFromContainer(e.Row); // получение индекса текущей строки
+			var row = (((DataRowView) table.SelectedItem).Row); // получение текущей строки
 			var columnIndex = e.Column.DisplayIndex;
-			row[columnIndex] = data;
-			dataBase.Update(row, index);
+			row[columnIndex] = data; // получение обновленных данных
+			dataBase.Update(row, index); // вызов метода обновления в БД
 		}
 
+		// метод обновления данных в БД при изменении булевого значения
 		private void CheckButtonClick(object sender, MouseButtonEventArgs e)
 		{
 			var columnIndex = table.CurrentCell.Column.DisplayIndex;
-			var data = ((DataRowView) table.SelectedItem).Row.ItemArray[columnIndex].ToString();
+			var data = ((DataRowView) table.SelectedItem).Row.ItemArray[columnIndex].ToString(); // получение значения
 			var index = table.Items.IndexOf(table.CurrentItem);
 			var row = ((DataRowView) table.SelectedItem).Row;
-			row[columnIndex] = data;
-			dataBase.Update(row, index);
+			row[columnIndex] = data; // получение обновленных данных
+			dataBase.Update(row, index); // вызов метода обновления в БД
 		}
 
+		// метод удаления данных из БД
 		private void RemoveButtonClick(object sender, MouseButtonEventArgs e)
 		{
-			var index = table.Items.IndexOf(table.CurrentItem);
-			dataBase.DeleteRow(index);
+			var index = table.Items.IndexOf(table.CurrentItem); // получение индекса удаляемой строки
+			dataBase.DeleteRow(index); // вызов метода удаления в БД
 		}
 
+		// метод добавления данных в БД
 		private void AddButtonClick(object sender, RoutedEventArgs e)
 		{
-			if (title.Content == null) return;
+			if (title.Content == null) return; // если не открыта ни одна таблица, метод не срабатывает
 			var row = ds.Tables[0].Rows[0];
-			new AddItemWindow(dataBase, row, table.Columns).Show();
+			new AddItemWindow(dataBase, row, table.Columns).Show(); // открытие окна добавления данных
 			table.Items.Refresh();
-		}
-
-		public void AddItem(string[] ids)
-		{
-			var name = title.Content.ToString();
 		}
 
 		private void AboutButtonClick(object sender, RoutedEventArgs e)
 		{
 			new Alert("О программе \"Database Lab\"",
-				"Database Lab v. 2.3\n© 2019 loshvitalik, MrBlacktop").Show();
+				"Database Lab v. 2.4\n© 2019 loshvitalik, MrBlacktop").Show();
 		}
 	}
 }
